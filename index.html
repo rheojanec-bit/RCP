@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Notice Generator — RCP Real Estate Management Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
     --green-dark:#232c1b;
@@ -181,12 +184,15 @@
   }
   #printBtn:hover{ background:var(--green-mid); }
   #printBtn:active{ transform:translateY(1px); }
-  #resetBtn, #clearBtn{
+  #resetBtn, #clearBtn, #historyBtn, #saveHistoryBtn{
     background:#fff;
     color:var(--green-dark);
     border-color:#cdd0c3;
   }
-  #resetBtn:hover, #clearBtn:hover{ background:#f4f5ef; border-color:var(--green-dark); }
+  #resetBtn:hover, #clearBtn:hover, #historyBtn:hover, #saveHistoryBtn:hover{ background:#f4f5ef; border-color:var(--green-dark); }
+  #historyBtn{ flex-shrink:0; }
+  .actions-row2{ display:flex; gap:8px; margin-top:8px; }
+  .actions-row2 button{ flex:1; }
   .autosave-note{
     font-size:10.5px;
     color:#93938a;
@@ -203,6 +209,167 @@
     margin-top:10px;
     line-height:1.45;
   }
+
+  /* ---------- HISTORY MODAL & TOAST ---------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(20,22,15,.5);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:24px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal{
+    background:#fff;
+    border-radius:12px;
+    width:600px;
+    max-width:100%;
+    max-height:80vh;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+  }
+  .modal-header h2{
+    font-size:15px;
+    margin:0;
+    color:var(--green-dark);
+    font-family:Georgia, serif;
+  }
+  .icon-btn-plain{
+    background:none;
+    border:none;
+    font-size:20px;
+    line-height:1;
+    cursor:pointer;
+    color:#888;
+    padding:2px 8px;
+    border-radius:4px;
+  }
+  .icon-btn-plain:hover{ background:#f1f2ec; color:#333; }
+  .modal-body{
+    overflow-y:auto;
+    padding:6px 10px;
+    flex:1;
+  }
+  .empty-state{
+    font-size:13px;
+    color:var(--muted);
+    text-align:center;
+    padding:36px 16px;
+    line-height:1.6;
+  }
+  .history-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:11px 10px;
+    border-radius:8px;
+  }
+  .history-row:hover{ background:#f7f8f3; }
+  .history-row + .history-row{ border-top:1px solid #eee; }
+  .history-row-main{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .history-type-badge{
+    font-size:9.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:4px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .history-type-badge.warning{ background:#fdf2d8; color:#8a6d00; border:1px solid #f0e0a0; }
+  .history-type-badge.final{ background:#eef1fb; color:var(--navy); border:1px solid #c9d3f2; }
+  .history-row-info{ min-width:0; }
+  .history-row-title{
+    font-size:13px;
+    font-weight:600;
+    margin:0;
+    color:#222;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .history-row-sub{
+    font-size:11px;
+    color:var(--muted);
+    margin:2px 0 0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .history-row-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .history-load-btn{
+    font-size:11.5px;
+    padding:6px 11px;
+    border-radius:6px;
+    border:1px solid var(--green-dark);
+    background:#fff;
+    color:var(--green-dark);
+    cursor:pointer;
+    font-weight:600;
+    font-family:inherit;
+  }
+  .history-load-btn:hover{ background:var(--green-dark); color:#fff; }
+  .history-delete-btn{
+    font-size:13px;
+    padding:5px 9px;
+    border-radius:6px;
+    border:1px solid #e3c9c9;
+    background:#fff;
+    color:#a33;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .history-delete-btn:hover{ background:#fdeded; }
+  .modal-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 20px;
+    border-top:1px solid var(--border);
+  }
+  .modal-footer .helper-note{ margin:0; }
+  #clearHistoryBtn{
+    font-size:12px;
+    padding:8px 12px;
+    border-radius:6px;
+    border:1px solid #e3c9c9;
+    background:#fff;
+    color:#a33;
+  }
+  #clearHistoryBtn:hover{ background:#fdeded; }
+
+  .toast{
+    position:fixed;
+    bottom:22px;
+    left:50%;
+    transform:translateX(-50%) translateY(16px);
+    background:var(--green-dark);
+    color:#fff;
+    padding:10px 20px;
+    border-radius:8px;
+    font-size:12.5px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s, transform .2s;
+    z-index:60;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
   /* ---------- PREVIEW PANEL ---------- */
   .preview-panel{
@@ -346,13 +513,15 @@
 
   .closing{ margin-top:8px; }
   .closing .warm{ font-weight:700; margin-bottom:34px; }
-  .sig-name{
-    font-family:'Brush Script MT','Segoe Script',cursive;
-    font-size:30px;
-    margin-bottom:2px;
-    color:#222;
+  .letter-body p.sig-name{
+    font-family:'Mrs Saint Delafield','Dancing Script','Segoe Script','Brush Script MT','Lucida Handwriting',cursive;
+    font-style:italic;
+    font-size:52px;
+    line-height:1.1;
+    margin:0 0 8px;
+    color:var(--navy);
   }
-  .sig-title{ font-weight:700; font-size:13.5px; margin-bottom:2px; }
+  .letter-body p.sig-title{ font-weight:700; font-size:13.5px; margin-bottom:2px; }
   .brand-mark{
     position:relative;
     height:58px;
@@ -371,7 +540,7 @@
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
-  .sig-company{
+  .letter-body p.sig-company{
     position:relative;
     z-index:1;
     font-weight:700;
@@ -610,7 +779,7 @@
 
       </form>
 
-      <p class="autosave-note">Entries are saved automatically in this browser only — nothing is uploaded anywhere.</p>
+      <p class="autosave-note">Your current draft is saved automatically in this browser. Click "Save" to also keep this notice in your History log — nothing is ever uploaded anywhere.</p>
       <p class="legal-note">This tool only formats the letter you already use. It is not legal advice — have counsel confirm the notice periods and forfeiture terms comply with your Contract to Sell and applicable law (e.g. RA 6552) before sending.</p>
     </div>
 
@@ -620,15 +789,43 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Print / Save as PDF
         </button>
+        <button id="historyBtn" type="button" title="View notice history">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg>
+        </button>
+      </div>
+      <div class="actions-row2">
         <button id="resetBtn" type="button" title="Reset to sample">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Reset
+        </button>
+        <button id="saveHistoryBtn" type="button" title="Save current notice to history">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save
         </button>
         <button id="clearBtn" type="button" title="Clear draft">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          Clear
         </button>
       </div>
     </div>
   </div>
+
+  <!-- ============ HISTORY MODAL ============ -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Notice History</h2>
+        <button type="button" class="icon-btn-plain" id="closeHistoryBtn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="historyList"></div>
+      <div class="modal-footer">
+        <span class="helper-note" id="historyCount"></span>
+        <button type="button" id="clearHistoryBtn">Clear all history</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <!-- ============ PREVIEW PANEL ============ -->
   <div class="preview-panel">
@@ -676,6 +873,8 @@
 <script>
 (function(){
   const STORAGE_KEY = 'noticeGeneratorDraft_v3';
+  const HISTORY_KEY = 'noticeGeneratorHistory_v1';
+  const HISTORY_LIMIT = 200;
 
   const SAMPLE_FINAL = {
     noticeType: 'final',
@@ -842,6 +1041,84 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       return raw ? JSON.parse(raw) : null;
     }catch(e){ return null; }
+  }
+
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+
+  function saveHistoryList(list){
+    try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); }catch(e){ /* ignore */ }
+  }
+
+  function showToast(message){
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  function addHistoryEntry(){
+    const v = getValues();
+    const list = loadHistory();
+    list.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      savedAt: new Date().toISOString(),
+      values: v
+    });
+    if (list.length > HISTORY_LIMIT) list.length = HISTORY_LIMIT;
+    saveHistoryList(list);
+    renderHistoryList();
+  }
+
+  function renderHistoryList(){
+    const list = loadHistory();
+    const countEl = document.getElementById('historyCount');
+    const container = document.getElementById('historyList');
+    countEl.textContent = `${list.length} saved notice${list.length === 1 ? '' : 's'}`;
+
+    if (!list.length){
+      container.innerHTML = '<p class="empty-state">No notices saved yet.<br/>Click "Save" to keep a record of this notice here before or after printing.</p>';
+      return;
+    }
+
+    container.innerHTML = list.map(entry => {
+      const v = entry.values;
+      const typeLabel = v.noticeType === 'warning' ? 'Warning' : 'Final Forfeiture';
+      const savedLabel = new Date(entry.savedAt).toLocaleString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
+      });
+      const title = `${v.recipientTitle} ${v.recipientName} — Blk ${v.block} Lot ${v.lot}`;
+      const sub = `Ref ${computeRefNo(v)} · Letter date ${formatLongDate(v.letterDate)} · Saved ${savedLabel}`;
+      return `
+        <div class="history-row">
+          <div class="history-row-main">
+            <span class="history-type-badge ${v.noticeType}">${escapeHtml(typeLabel)}</span>
+            <div class="history-row-info">
+              <p class="history-row-title">${escapeHtml(title)}</p>
+              <p class="history-row-sub">${escapeHtml(sub)}</p>
+            </div>
+          </div>
+          <div class="history-row-actions">
+            <button type="button" class="history-load-btn" data-id="${entry.id}">Load</button>
+            <button type="button" class="history-delete-btn" data-id="${entry.id}" aria-label="Delete">&times;</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openHistoryModal(){
+    renderHistoryList();
+    document.getElementById('historyModal').classList.add('show');
+  }
+
+  function closeHistoryModal(){
+    document.getElementById('historyModal').classList.remove('show');
   }
 
   function toggleTypeFields(v){
@@ -1013,6 +1290,52 @@
       try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
       setValues(SAMPLE_FINAL);
       render();
+    });
+
+    document.getElementById('saveHistoryBtn').addEventListener('click', () => {
+      addHistoryEntry();
+      showToast('Saved to history ✓');
+    });
+
+    document.getElementById('historyBtn').addEventListener('click', openHistoryModal);
+    document.getElementById('closeHistoryBtn').addEventListener('click', closeHistoryModal);
+
+    document.getElementById('historyModal').addEventListener('click', (e) => {
+      if (e.target.id === 'historyModal') closeHistoryModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeHistoryModal();
+    });
+
+    document.getElementById('historyList').addEventListener('click', (e) => {
+      const loadBtn = e.target.closest('.history-load-btn');
+      const deleteBtn = e.target.closest('.history-delete-btn');
+
+      if (loadBtn){
+        const list = loadHistory();
+        const entry = list.find(item => item.id === loadBtn.dataset.id);
+        if (entry){
+          setValues(entry.values);
+          render();
+          closeHistoryModal();
+          showToast('Notice loaded ✓');
+        }
+        return;
+      }
+
+      if (deleteBtn){
+        const list = loadHistory().filter(item => item.id !== deleteBtn.dataset.id);
+        saveHistoryList(list);
+        renderHistoryList();
+      }
+    });
+
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+      if (loadHistory().length && confirm('Delete all saved notice history? This cannot be undone.')){
+        saveHistoryList([]);
+        renderHistoryList();
+      }
     });
   }
 
