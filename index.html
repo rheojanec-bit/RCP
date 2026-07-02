@@ -348,12 +348,38 @@
   .closing .warm{ font-weight:700; margin-bottom:34px; }
   .sig-name{
     font-family:'Brush Script MT','Segoe Script',cursive;
-    font-size:27px;
+    font-size:30px;
     margin-bottom:2px;
     color:#222;
   }
-  .sig-title{ font-weight:700; font-size:13.5px; }
-  .sig-company{ font-weight:700; color:var(--green-dark); font-size:13.5px; letter-spacing:.02em; }
+  .sig-title{ font-weight:700; font-size:13.5px; margin-bottom:2px; }
+  .brand-mark{
+    position:relative;
+    height:58px;
+    display:flex;
+    align-items:flex-end;
+    margin:2px 0 0;
+  }
+  .closing-skyline{
+    position:absolute;
+    left:-18%;
+    width:136%;
+    bottom:-2px;
+    height:56px;
+    z-index:0;
+    pointer-events:none;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .sig-company{
+    position:relative;
+    z-index:1;
+    font-weight:700;
+    color:#9a9d90;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
 
   .letter-footer{
     height:44px;
@@ -764,6 +790,21 @@
     return `${prefix}-${y}-${m}${d}`;
   }
 
+  const SKYLINE_MARK = `<svg class="closing-skyline" viewBox="0 0 600 56" preserveAspectRatio="none" aria-hidden="true">
+    <rect x="6" y="18" width="26" height="38" fill="#aeb2a2"/>
+    <rect x="36" y="8" width="22" height="48" fill="#aeb2a2"/>
+    <rect x="62" y="24" width="18" height="32" fill="#aeb2a2"/>
+    <rect x="86" y="14" width="24" height="42" fill="#aeb2a2"/>
+    <rect x="116" y="26" width="16" height="30" fill="#aeb2a2"/>
+    <rect x="138" y="16" width="20" height="40" fill="#aeb2a2"/>
+    <rect x="440" y="20" width="18" height="36" fill="#aeb2a2"/>
+    <rect x="464" y="6" width="24" height="50" fill="#aeb2a2"/>
+    <rect x="494" y="22" width="18" height="34" fill="#aeb2a2"/>
+    <rect x="518" y="12" width="22" height="44" fill="#aeb2a2"/>
+    <rect x="546" y="24" width="16" height="32" fill="#aeb2a2"/>
+    <rect x="568" y="14" width="20" height="42" fill="#aeb2a2"/>
+  </svg>`;
+
   function escapeHtml(str){
     return String(str || '').replace(/[&<>"']/g, ch => ({
       '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
@@ -847,7 +888,10 @@
         <p class="warm">Warm Regards,</p>
         <p class="sig-name">${escapeHtml(v.signatoryName)}</p>
         <p class="sig-title">${escapeHtml(v.signatoryTitle)}</p>
-        <p class="sig-company">${escapeHtml(v.signatoryCompany.toUpperCase())}</p>
+        <div class="brand-mark">
+          ${SKYLINE_MARK}
+          <p class="sig-company">${escapeHtml(v.signatoryCompany.toUpperCase())}</p>
+        </div>
       </div>
     `;
   }
@@ -888,7 +932,10 @@
         <p class="warm">Warm Regards,</p>
         <p class="sig-name">${escapeHtml(v.signatoryName)}</p>
         <p class="sig-title">${escapeHtml(v.signatoryTitle)}</p>
-        <p class="sig-company">${escapeHtml(v.signatoryCompany.toUpperCase())}</p>
+        <div class="brand-mark">
+          ${SKYLINE_MARK}
+          <p class="sig-company">${escapeHtml(v.signatoryCompany.toUpperCase())}</p>
+        </div>
       </div>
     `;
   }
