@@ -6,50 +6,87 @@
 <title>Notice Generator — RCP Real Estate Management Services</title>
 <style>
   :root{
-    --green-dark:#2f3826;
-    --green-mid:#3d4a2c;
-    --gold:#cdb87a;
-    --navy:#1a3c8a;
+    --green-dark:#232c1b;
+    --green-mid:#3a4a2c;
+    --gold:#b9975b;
+    --gold-light:#e6d9b3;
+    --navy:#1f2f5c;
+    --ink:#232323;
+    --muted:#6b6b62;
+    --panel-bg:#f3f4ef;
+    --border:#dfe1d6;
     --paper:#ffffff;
-    --ink:#1c1c1c;
-    --panel-bg:#f4f5f0;
-    --border:#d9dccf;
+    --callout-bg:#f6f7fb;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
-    font-family:Georgia, 'Times New Roman', serif;
+    font-family:Georgia, Cambria, 'Times New Roman', serif;
     background:var(--panel-bg);
     color:var(--ink);
   }
   .app{
     display:flex;
-    min-height:100vh;
-    align-items:flex-start;
+    height:100vh;
+    align-items:stretch;
   }
+
   /* ---------- FORM PANEL ---------- */
   .form-panel{
-    width:420px;
+    width:430px;
     flex-shrink:0;
     background:#fff;
     border-right:1px solid var(--border);
-    padding:24px;
+    display:flex;
+    flex-direction:column;
     height:100vh;
-    overflow-y:auto;
-    position:sticky;
-    top:0;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
-  .form-panel h1{
-    font-size:18px;
+  .form-panel-header{
+    padding:22px 24px 14px;
+    border-bottom:1px solid var(--border);
+  }
+  .form-panel-header h1{
+    font-size:16px;
     margin:0 0 4px;
     color:var(--green-dark);
+    letter-spacing:.01em;
   }
-  .form-panel .subtitle{
+  .form-panel-header .subtitle{
     font-size:12px;
-    color:#666;
-    margin:0 0 20px;
+    color:var(--muted);
+    margin:0;
+    line-height:1.5;
   }
+  .form-scroll{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 24px 24px;
+  }
+
+  .segmented{
+    display:flex;
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:hidden;
+    margin-bottom:10px;
+  }
+  .seg-btn{
+    flex:1;
+    padding:10px 8px;
+    font-size:12.5px;
+    font-weight:600;
+    background:#fff;
+    border:none;
+    color:#555;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+    font-family:inherit;
+  }
+  .seg-btn + .seg-btn{ border-left:1px solid var(--border); }
+  .seg-btn.active{ background:var(--green-dark); color:#fff; }
+  .seg-btn:not(.active):hover{ background:#f1f2ec; }
+
   fieldset{
     border:1px solid var(--border);
     border-radius:8px;
@@ -57,20 +94,19 @@
     padding:12px 14px 14px;
   }
   fieldset.type-warning{
-    border-color:#e3c98a;
+    border-color:var(--gold);
     background:#fffdf6;
   }
   legend{
-    font-size:12px;
+    font-size:11px;
     font-weight:700;
     text-transform:uppercase;
-    letter-spacing:.04em;
+    letter-spacing:.06em;
     color:var(--green-mid);
     padding:0 6px;
   }
-  .field{
-    margin-bottom:10px;
-  }
+  .field{ margin-bottom:10px; }
+  .field:last-child{ margin-bottom:0; }
   .field label{
     display:block;
     font-size:12px;
@@ -80,208 +116,251 @@
   }
   .field input, .field select{
     width:100%;
-    padding:7px 8px;
+    padding:8px 9px;
     font-size:13px;
-    border:1px solid #c9cbc3;
-    border-radius:5px;
+    border:1px solid #cdd0c3;
+    border-radius:6px;
     font-family:inherit;
+    background:#fff;
+    transition:border-color .15s, box-shadow .15s;
   }
-  .row2{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
+  .field input:focus, .field select:focus{
+    outline:none;
+    border-color:var(--navy);
+    box-shadow:0 0 0 3px rgba(31,47,92,.12);
   }
-  .row3{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:8px;
+  .field .hint{
+    font-size:10.5px;
+    color:var(--muted);
+    margin-top:3px;
   }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .row3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
   .calc-note{
     font-size:11.5px;
     color:var(--navy);
     background:#eef1fb;
     border:1px solid #c9d3f2;
     border-radius:6px;
-    padding:6px 8px;
+    padding:7px 9px;
     margin-top:2px;
   }
   .helper-note{
     font-size:11px;
-    color:#777;
+    color:var(--muted);
     margin:2px 0 0;
+    line-height:1.4;
   }
-  .actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:8px;
+
+  .form-actions-bar{
+    padding:14px 24px 16px;
+    border-top:1px solid var(--border);
+    background:#fff;
   }
+  .actions{ display:flex; gap:8px; }
   button{
     font-family:inherit;
     font-size:13px;
     font-weight:600;
-    padding:9px 14px;
-    border-radius:6px;
+    padding:10px 14px;
+    border-radius:7px;
     border:1px solid var(--green-dark);
     cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    transition:background .15s, box-shadow .15s, transform .05s;
   }
+  button svg{ width:14px; height:14px; flex-shrink:0; }
   #printBtn{
     background:var(--green-dark);
     color:#fff;
     flex:1 1 auto;
+    box-shadow:0 1px 2px rgba(0,0,0,.15);
   }
   #printBtn:hover{ background:var(--green-mid); }
+  #printBtn:active{ transform:translateY(1px); }
   #resetBtn, #clearBtn{
     background:#fff;
     color:var(--green-dark);
+    border-color:#cdd0c3;
   }
+  #resetBtn:hover, #clearBtn:hover{ background:#f4f5ef; border-color:var(--green-dark); }
   .autosave-note{
-    font-size:11px;
-    color:#888;
-    margin-top:10px;
+    font-size:10.5px;
+    color:#93938a;
+    margin:10px 0 0;
+    line-height:1.5;
   }
   .legal-note{
-    font-size:11px;
+    font-size:10.5px;
     color:#8a6d00;
     background:#fff8e1;
     border:1px solid #f0e0a0;
     border-radius:6px;
     padding:8px 10px;
-    margin-top:16px;
-    line-height:1.4;
+    margin-top:10px;
+    line-height:1.45;
   }
 
   /* ---------- PREVIEW PANEL ---------- */
   .preview-panel{
     flex:1;
+    overflow-y:auto;
     display:flex;
     justify-content:center;
-    padding:32px 24px;
+    padding:36px 24px;
   }
   .letter{
     width:8.5in;
     max-width:100%;
     min-height:11in;
+    height:fit-content;
     background:var(--paper);
-    box-shadow:0 4px 18px rgba(0,0,0,.18);
+    box-shadow:0 8px 28px rgba(30,35,20,.16), 0 1px 0 rgba(0,0,0,.04);
     display:flex;
     flex-direction:column;
+  }
+  .letter-accent{
+    height:6px;
+    background:linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
   .letter-header{
     background:var(--green-dark);
     color:#fff;
-    padding:22px 36px;
+    padding:26px 44px;
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:20px;
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
   .logo-badge{
-    width:74px;
-    height:74px;
+    width:72px;
+    height:72px;
     border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #4a5a37, #22291a);
-    border:3px solid var(--gold);
+    background:radial-gradient(circle at 35% 30%, #4a5a37, #1a2013);
+    border:2.5px solid var(--gold);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.08), 0 2px 8px rgba(0,0,0,.4);
     display:flex;
     align-items:center;
     justify-content:center;
     flex-shrink:0;
-    color:var(--gold);
+    color:var(--gold-light);
     font-weight:700;
-    font-size:20px;
-    letter-spacing:.03em;
+    font-size:19px;
+    letter-spacing:.04em;
+    font-family:Georgia, serif;
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
   .header-text .company-name{
-    font-size:21px;
+    font-size:20px;
     font-weight:700;
-    letter-spacing:.02em;
-    line-height:1.25;
-    margin:0 0 6px;
+    letter-spacing:.035em;
+    line-height:1.3;
+    margin:0 0 7px;
   }
   .header-text .company-meta{
-    font-size:11.5px;
-    color:var(--gold);
-    line-height:1.5;
+    font-size:11px;
+    color:var(--gold-light);
+    line-height:1.6;
+    letter-spacing:.01em;
+  }
+  .letter-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:9px 44px;
+    background:#faf9f3;
+    border-bottom:1px solid var(--border);
+    font-family:-apple-system, 'Segoe UI', sans-serif;
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.02em;
+  }
+  .confidential-badge{
+    border:1px solid var(--navy);
+    color:var(--navy);
+    padding:3px 11px;
+    border-radius:20px;
+    font-weight:700;
+    font-size:9.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    white-space:nowrap;
   }
   .letter-body{
     flex:1;
-    padding:30px 40px 10px;
-    border-bottom:4px solid var(--green-dark);
-  }
-  .rule{
-    border:none;
-    border-top:2px solid var(--green-dark);
-    margin:0 0 18px;
+    padding:34px 48px 12px;
   }
   .letter-body p{
-    line-height:1.6;
+    line-height:1.68;
     margin:0 0 14px;
     text-align:justify;
+    font-size:14px;
   }
-  .letter-body p.letter-date{
-    font-weight:700;
-  }
-  .letter-body p.recipient-block{
-    font-weight:700;
-    line-height:1.5;
-  }
+  .letter-body p.letter-date{ font-weight:700; }
+  .letter-body p.recipient-block{ font-weight:700; line-height:1.55; }
   .letter-body p.subject-line{
     font-weight:700;
     color:var(--navy);
+    text-transform:uppercase;
+    letter-spacing:.035em;
+    font-size:13px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
   }
-  .letter-body p.salutation{
-    font-weight:700;
+  .letter-body p.salutation{ font-weight:700; }
+  .letter-body p.bold{ font-weight:700; }
+
+  .clause-box{
+    border-left:3px solid var(--navy);
+    background:var(--callout-bg);
+    padding:14px 18px 16px;
+    border-radius:0 8px 8px 0;
+    margin:2px 0 22px;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
-  .letter-body p.bold{
-    font-weight:700;
-  }
-  .letter-body p.heading-line{
+  .clause-box .heading-line{
     font-weight:700;
     color:var(--navy);
-    margin-bottom:8px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-size:11.5px;
+    margin:0 0 10px;
   }
-  .terms-item{
-    display:flex;
-    gap:8px;
-    margin-bottom:16px;
-  }
-  .terms-item .num{
-    font-weight:700;
-  }
+  .terms-item{ display:flex; gap:8px; }
+  .terms-item .num{ font-weight:700; }
   .terms-item p{
     margin:0;
     font-weight:700;
-    line-height:1.6;
+    line-height:1.62;
     text-align:justify;
+    font-size:13.5px;
   }
-  .closing{
-    margin-top:10px;
-  }
-  .closing .warm{
-    font-weight:700;
-    margin-bottom:36px;
-  }
+
+  .closing{ margin-top:8px; }
+  .closing .warm{ font-weight:700; margin-bottom:34px; }
   .sig-name{
     font-family:'Brush Script MT','Segoe Script',cursive;
-    font-size:26px;
+    font-size:27px;
     margin-bottom:2px;
     color:#222;
   }
-  .sig-title{
-    font-weight:700;
-  }
-  .sig-company{
-    font-weight:700;
-    color:var(--green-dark);
-  }
+  .sig-title{ font-weight:700; font-size:13.5px; }
+  .sig-company{ font-weight:700; color:var(--green-dark); font-size:13.5px; letter-spacing:.02em; }
+
   .letter-footer{
-    height:46px;
+    height:44px;
     background:var(--green-dark);
     position:relative;
     overflow:hidden;
+    border-top:2px solid var(--gold);
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
@@ -291,26 +370,30 @@
     left:0;
     width:100%;
     height:100%;
-    opacity:.45;
   }
 
   mark{
     background:none;
     font-weight:700;
     color:inherit;
+    text-decoration:underline;
+    text-decoration-color:var(--gold);
+    text-decoration-thickness:2px;
+    text-underline-offset:3px;
   }
 
   @media print{
     .form-panel{ display:none; }
-    .preview-panel{ padding:0; }
+    .preview-panel{ padding:0; overflow:visible; }
     body{ background:#fff; }
     .letter{ box-shadow:none; width:auto; min-height:auto; }
     @page{ size: Letter; margin: 0; }
   }
 
   @media (max-width: 900px){
-    .app{ flex-direction:column; }
-    .form-panel{ width:100%; height:auto; position:relative; }
+    .app{ flex-direction:column; height:auto; }
+    .form-panel{ width:100%; height:auto; }
+    .form-scroll{ max-height:60vh; }
     .letter{ width:100%; }
   }
 </style>
@@ -320,191 +403,211 @@
 
   <!-- ============ FORM PANEL ============ -->
   <div class="form-panel">
-    <h1>Notice Generator</h1>
-    <p class="subtitle">Fill in the details below — the letter on the right updates automatically. Use "Print / Save as PDF" when ready.</p>
-
-    <form id="noticeForm" autocomplete="off">
-
-      <fieldset>
-        <legend>Notice type</legend>
-        <div class="field">
-          <label for="noticeType">Which letter do you need?</label>
-          <select id="noticeType">
-            <option value="warning">Warning — possible forfeiture (first notice)</option>
-            <option value="final">Final Notice of Forfeiture</option>
-          </select>
-        </div>
-        <p class="helper-note">Send the Warning first. If the account is still unsettled after the deadline, switch to Final Notice of Forfeiture.</p>
-      </fieldset>
-
-      <fieldset>
-        <legend>Company / Letterhead</legend>
-        <div class="field">
-          <label for="companyName">Company name</label>
-          <input id="companyName" type="text" />
-        </div>
-        <div class="field">
-          <label for="companyAddress">Office address</label>
-          <input id="companyAddress" type="text" />
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="companyPhone">Phone</label>
-            <input id="companyPhone" type="text" />
-          </div>
-          <div class="field">
-            <label for="companyEmail">Email</label>
-            <input id="companyEmail" type="text" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="logoInitials">Logo initials</label>
-          <input id="logoInitials" type="text" maxlength="4" />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Recipient</legend>
-        <div class="row3">
-          <div class="field">
-            <label for="recipientTitle">Title</label>
-            <select id="recipientTitle">
-              <option>Mr.</option>
-              <option>Ms.</option>
-              <option>Mrs.</option>
-              <option>Engr.</option>
-              <option>Atty.</option>
-            </select>
-          </div>
-          <div class="field" style="grid-column:span 2;">
-            <label for="recipientName">Full name</label>
-            <input id="recipientName" type="text" placeholder="Mark Arroyo" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="recipientCity">City</label>
-          <input id="recipientCity" type="text" />
-        </div>
-        <div class="field">
-          <label for="recipientProvince">Province / ZIP</label>
-          <input id="recipientProvince" type="text" />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Letter date</legend>
-        <div class="field">
-          <label for="letterDate">Date of notice</label>
-          <input id="letterDate" type="date" />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Property details</legend>
-        <div class="row3">
-          <div class="field">
-            <label for="block">Block</label>
-            <input id="block" type="text" />
-          </div>
-          <div class="field">
-            <label for="lot">Lot</label>
-            <input id="lot" type="text" />
-          </div>
-          <div class="field">
-            <label for="purok">Purok</label>
-            <input id="purok" type="text" />
-          </div>
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="barangay">Barangay / Sitio</label>
-            <input id="barangay" type="text" />
-          </div>
-          <div class="field">
-            <label for="propertyCity">City</label>
-            <input id="propertyCity" type="text" />
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Non-payment period</legend>
-        <div class="row2">
-          <div class="field">
-            <label for="delinqStart">First unpaid month</label>
-            <input id="delinqStart" type="month" />
-          </div>
-          <div class="field">
-            <label for="delinqEnd">Latest unpaid month</label>
-            <input id="delinqEnd" type="month" />
-          </div>
-        </div>
-        <div class="calc-note" id="calcNote">Months delayed will be calculated automatically.</div>
-      </fieldset>
-
-      <fieldset id="warningFieldset" class="type-warning">
-        <legend>Warning notice — settlement deadline</legend>
-        <div class="field">
-          <label for="settleDeadline">Settle balance on or before</label>
-          <input id="settleDeadline" type="date" />
-        </div>
-        <p class="helper-note">Leave blank to default to the last day of the letter's month.</p>
-      </fieldset>
-
-      <fieldset>
-        <legend>Contract terms</legend>
-        <div class="row3">
-          <div class="field">
-            <label for="installmentThreshold">Missed installments that trigger forfeiture</label>
-            <input id="installmentThreshold" type="number" min="1" />
-          </div>
-          <div class="field">
-            <label for="interestRate">Monthly interest (%)</label>
-            <input id="interestRate" type="number" min="0" step="0.1" />
-          </div>
-          <div class="field">
-            <label for="graceDays">Grace period (days)</label>
-            <input id="graceDays" type="number" min="0" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="contestDays">Days to contest notice after receipt</label>
-          <input id="contestDays" type="number" min="0" />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Signatory</legend>
-        <div class="field">
-          <label for="signatoryName">Name</label>
-          <input id="signatoryName" type="text" />
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="signatoryTitle">Title</label>
-            <input id="signatoryTitle" type="text" />
-          </div>
-          <div class="field">
-            <label for="signatoryCompany">Signing for</label>
-            <input id="signatoryCompany" type="text" />
-          </div>
-        </div>
-      </fieldset>
-
-    </form>
-
-    <div class="actions">
-      <button id="printBtn" type="button">Print / Save as PDF</button>
-      <button id="resetBtn" type="button">Reset to sample</button>
-      <button id="clearBtn" type="button">Clear draft</button>
+    <div class="form-panel-header">
+      <h1>Notice Generator</h1>
+      <p class="subtitle">Fill in the details — the letter updates live. Use "Print / Save as PDF" when ready.</p>
     </div>
-    <p class="autosave-note">Your entries are saved automatically in this browser (nothing is uploaded anywhere). "Reset to sample" loads the example matching the notice type selected above.</p>
-    <p class="legal-note">This tool only formats the letter you already use. It is not legal advice — have counsel confirm the notice periods and forfeiture terms comply with your Contract to Sell and applicable law (e.g. RA 6552) before sending.</p>
+
+    <div class="form-scroll">
+      <form id="noticeForm" autocomplete="off">
+
+        <fieldset>
+          <legend>Notice type</legend>
+          <div class="segmented" id="typeSegmented">
+            <button type="button" class="seg-btn" data-value="warning">Warning</button>
+            <button type="button" class="seg-btn" data-value="final">Final Forfeiture</button>
+          </div>
+          <select id="noticeType" style="display:none">
+            <option value="warning">Warning</option>
+            <option value="final">Final</option>
+          </select>
+          <p class="helper-note">Send the Warning first. If unresolved by the deadline, switch to Final Notice of Forfeiture.</p>
+          <div class="field" style="margin-top:10px;">
+            <label for="referenceNo">Reference no. (optional)</label>
+            <input id="referenceNo" type="text" placeholder="Auto-generated from date &amp; type" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Company / Letterhead</legend>
+          <div class="field">
+            <label for="companyName">Company name</label>
+            <input id="companyName" type="text" />
+          </div>
+          <div class="field">
+            <label for="companyAddress">Office address</label>
+            <input id="companyAddress" type="text" />
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="companyPhone">Phone</label>
+              <input id="companyPhone" type="text" />
+            </div>
+            <div class="field">
+              <label for="companyEmail">Email</label>
+              <input id="companyEmail" type="text" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="logoInitials">Logo initials</label>
+            <input id="logoInitials" type="text" maxlength="4" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Recipient</legend>
+          <div class="row3">
+            <div class="field">
+              <label for="recipientTitle">Title</label>
+              <select id="recipientTitle">
+                <option>Mr.</option>
+                <option>Ms.</option>
+                <option>Mrs.</option>
+                <option>Engr.</option>
+                <option>Atty.</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:span 2;">
+              <label for="recipientName">Full name</label>
+              <input id="recipientName" type="text" placeholder="Mark Arroyo" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="recipientCity">City</label>
+            <input id="recipientCity" type="text" />
+          </div>
+          <div class="field">
+            <label for="recipientProvince">Province / ZIP</label>
+            <input id="recipientProvince" type="text" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Letter date</legend>
+          <div class="field">
+            <label for="letterDate">Date of notice</label>
+            <input id="letterDate" type="date" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Property details</legend>
+          <div class="row3">
+            <div class="field">
+              <label for="block">Block</label>
+              <input id="block" type="text" />
+            </div>
+            <div class="field">
+              <label for="lot">Lot</label>
+              <input id="lot" type="text" />
+            </div>
+            <div class="field">
+              <label for="purok">Purok</label>
+              <input id="purok" type="text" />
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="barangay">Barangay / Sitio</label>
+              <input id="barangay" type="text" />
+            </div>
+            <div class="field">
+              <label for="propertyCity">City</label>
+              <input id="propertyCity" type="text" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Non-payment period</legend>
+          <div class="row2">
+            <div class="field">
+              <label for="delinqStart">First unpaid month</label>
+              <input id="delinqStart" type="month" />
+            </div>
+            <div class="field">
+              <label for="delinqEnd">Latest unpaid month</label>
+              <input id="delinqEnd" type="month" />
+            </div>
+          </div>
+          <div class="calc-note" id="calcNote">Months delayed will be calculated automatically.</div>
+        </fieldset>
+
+        <fieldset id="warningFieldset" class="type-warning">
+          <legend>Warning notice — settlement deadline</legend>
+          <div class="field">
+            <label for="settleDeadline">Settle balance on or before</label>
+            <input id="settleDeadline" type="date" />
+          </div>
+          <p class="helper-note">Leave blank to default to the last day of the letter's month.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Contract terms</legend>
+          <div class="row3">
+            <div class="field">
+              <label for="installmentThreshold">Missed installments that trigger forfeiture</label>
+              <input id="installmentThreshold" type="number" min="1" />
+            </div>
+            <div class="field">
+              <label for="interestRate">Monthly interest (%)</label>
+              <input id="interestRate" type="number" min="0" step="0.1" />
+            </div>
+            <div class="field">
+              <label for="graceDays">Grace period (days)</label>
+              <input id="graceDays" type="number" min="0" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="contestDays">Days to contest notice after receipt</label>
+            <input id="contestDays" type="number" min="0" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Signatory</legend>
+          <div class="field">
+            <label for="signatoryName">Name</label>
+            <input id="signatoryName" type="text" />
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="signatoryTitle">Title</label>
+              <input id="signatoryTitle" type="text" />
+            </div>
+            <div class="field">
+              <label for="signatoryCompany">Signing for</label>
+              <input id="signatoryCompany" type="text" />
+            </div>
+          </div>
+        </fieldset>
+
+      </form>
+
+      <p class="autosave-note">Entries are saved automatically in this browser only — nothing is uploaded anywhere.</p>
+      <p class="legal-note">This tool only formats the letter you already use. It is not legal advice — have counsel confirm the notice periods and forfeiture terms comply with your Contract to Sell and applicable law (e.g. RA 6552) before sending.</p>
+    </div>
+
+    <div class="form-actions-bar">
+      <div class="actions">
+        <button id="printBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print / Save as PDF
+        </button>
+        <button id="resetBtn" type="button" title="Reset to sample">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        </button>
+        <button id="clearBtn" type="button" title="Clear draft">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- ============ PREVIEW PANEL ============ -->
   <div class="preview-panel">
     <div class="letter" id="letter">
+      <div class="letter-accent"></div>
       <div class="letter-header">
         <div class="logo-badge" id="outLogo">RCP</div>
         <div class="header-text">
@@ -517,22 +620,26 @@
         </div>
       </div>
 
+      <div class="letter-meta">
+        <span id="outRefNo"></span>
+        <span class="confidential-badge">Confidential</span>
+      </div>
+
       <div class="letter-body">
-        <hr class="rule" />
         <div id="letterContent"></div>
       </div>
 
       <div class="letter-footer">
         <svg viewBox="0 0 600 60" preserveAspectRatio="none">
-          <rect x="10" y="20" width="30" height="40" fill="#9aa38a"/>
-          <rect x="45" y="10" width="24" height="50" fill="#9aa38a"/>
-          <rect x="75" y="28" width="20" height="32" fill="#9aa38a"/>
-          <rect x="105" y="15" width="26" height="45" fill="#9aa38a"/>
-          <rect x="140" y="25" width="18" height="35" fill="#9aa38a"/>
-          <rect x="470" y="18" width="22" height="42" fill="#9aa38a"/>
-          <rect x="500" y="8" width="26" height="52" fill="#9aa38a"/>
-          <rect x="532" y="24" width="20" height="36" fill="#9aa38a"/>
-          <rect x="558" y="14" width="24" height="46" fill="#9aa38a"/>
+          <rect x="10" y="20" width="30" height="40" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="45" y="10" width="24" height="50" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="75" y="28" width="20" height="32" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="105" y="15" width="26" height="45" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="140" y="25" width="18" height="35" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="470" y="18" width="22" height="42" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="500" y="8" width="26" height="52" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="532" y="24" width="20" height="36" fill="#8f9a7b" opacity="0.55"/>
+          <rect x="558" y="14" width="24" height="46" fill="#8f9a7b" opacity="0.55"/>
         </svg>
       </div>
     </div>
@@ -542,10 +649,11 @@
 
 <script>
 (function(){
-  const STORAGE_KEY = 'noticeGeneratorDraft_v2';
+  const STORAGE_KEY = 'noticeGeneratorDraft_v3';
 
   const SAMPLE_FINAL = {
     noticeType: 'final',
+    referenceNo: '',
     companyName: 'RCP REAL ESTATE MANAGEMENT SERVICES',
     companyAddress: 'Ground Floor, Husky Building Tour Center, North Buluang Ave., GSC',
     companyPhone: '+63 951-152-4486',
@@ -575,6 +683,7 @@
 
   const SAMPLE_WARNING = {
     noticeType: 'warning',
+    referenceNo: '',
     companyName: 'RCP REAL ESTATE MANAGEMENT SERVICES',
     companyAddress: 'Ground Floor, Husky Building Tour Center, North Buluang Ave., GSC',
     companyPhone: '+63 951-152-4486',
@@ -647,6 +756,14 @@
     return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   }
 
+  function computeRefNo(v){
+    if (v.referenceNo) return v.referenceNo;
+    if (!v.letterDate) return '';
+    const [y, m, d] = v.letterDate.split('-');
+    const prefix = v.noticeType === 'warning' ? 'WN' : 'FN';
+    return `${prefix}-${y}-${m}${d}`;
+  }
+
   function escapeHtml(str){
     return String(str || '').replace(/[&<>"']/g, ch => ({
       '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
@@ -670,6 +787,7 @@
       const fallback = (v.noticeType === 'warning' ? SAMPLE_WARNING : SAMPLE_FINAL)[id];
       el.value = v[id] !== undefined && v[id] !== '' ? v[id] : (fallback !== undefined ? fallback : '');
     });
+    syncSegmented();
   }
 
   function saveDraft(){
@@ -689,6 +807,13 @@
     document.getElementById('warningFieldset').style.display = v.noticeType === 'warning' ? '' : 'none';
   }
 
+  function syncSegmented(){
+    const current = document.getElementById('noticeType').value;
+    document.querySelectorAll('#typeSegmented .seg-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.value === current);
+    });
+  }
+
   function buildFinalBody(v, d){
     return `
       <p class="letter-date">${d.dateFormatted}</p>
@@ -701,12 +826,14 @@
         due to non-compliance with the terms and conditions of the Contract to Sell. According to our records,
         you have failed to make any monthly payments from <mark>${d.startLabel} to ${d.endLabel}</mark>, totaling
         <mark>${d.monthsWord.toUpperCase()} (${d.monthsCount}) consecutive months</mark> of non-payment.</p>
-      <p class="heading-line">As stated in the agreement:</p>
-      <div class="terms-item">
-        <span class="num">1.</span>
-        <p>Failure to pay ${d.installmentWord} (${escapeHtml(String(v.installmentThreshold))}) consecutive monthly installments
-          — with a ${escapeHtml(String(v.interestRate))}% monthly interest applied after a ${d.graceWord} (${escapeHtml(String(v.graceDays))}) working-day grace period
-          — grants the Vendor full authority to forfeit the reservation and resell the property.</p>
+      <div class="clause-box">
+        <p class="heading-line">As stated in the agreement</p>
+        <div class="terms-item">
+          <span class="num">1.</span>
+          <p>Failure to pay ${d.installmentWord} (${escapeHtml(String(v.installmentThreshold))}) consecutive monthly installments
+            — with a ${escapeHtml(String(v.interestRate))}% monthly interest applied after a ${d.graceWord} (${escapeHtml(String(v.graceDays))}) working-day grace period
+            — grants the Vendor full authority to forfeit the reservation and resell the property.</p>
+        </div>
       </div>
       <p class="bold">As a result, ${escapeHtml(v.companyName)} is now exercising its right to forfeit your account. All payments made are
         considered non-refundable, and your rights to the said property are revoked effective immediately.</p>
@@ -738,12 +865,14 @@
         due to non-compliance with the terms and conditions stated in your Contract to Sell.</p>
       <p class="bold" style="color:var(--navy)">Based on our records, there have been no monthly payments made from ${d.startLabel} to ${d.endLabel},
         totaling ${d.monthsWord} (${d.monthsCount}) consecutive months of non-payment.</p>
-      <p class="heading-line">As stipulated in the agreement:</p>
-      <div class="terms-item">
-        <span class="num">1.</span>
-        <p>Failure to pay ${d.installmentWord} (${escapeHtml(String(v.installmentThreshold))}) consecutive monthly installments
-          — with a corresponding ${escapeHtml(String(v.interestRate))}% monthly interest applied after a ${d.graceWord} (${escapeHtml(String(v.graceDays))}) working-day grace period
-          — grants the Vendor the right to forfeit the reservation and resell the property.</p>
+      <div class="clause-box">
+        <p class="heading-line">As stipulated in the agreement</p>
+        <div class="terms-item">
+          <span class="num">1.</span>
+          <p>Failure to pay ${d.installmentWord} (${escapeHtml(String(v.installmentThreshold))}) consecutive monthly installments
+            — with a corresponding ${escapeHtml(String(v.interestRate))}% monthly interest applied after a ${d.graceWord} (${escapeHtml(String(v.graceDays))}) working-day grace period
+            — grants the Vendor the right to forfeit the reservation and resell the property.</p>
+        </div>
       </div>
       <p>In this regard, ${escapeHtml(v.companyName)} is issuing this notice as a formal warning and is respectfully encouraging you
         to settle your outstanding balance on or before <mark>${d.deadlineFormatted}</mark> to update your account and avoid further action.</p>
@@ -767,6 +896,7 @@
   function render(){
     const v = getValues();
     toggleTypeFields(v);
+    syncSegmented();
 
     const monthsCount = monthsBetweenInclusive(v.delinqStart, v.delinqEnd);
     const monthsWord = numberToWords(monthsCount).toUpperCase();
@@ -792,6 +922,7 @@
     document.getElementById('outCompanyAddress').textContent = v.companyAddress;
     document.getElementById('outCompanyPhone').textContent = v.companyPhone;
     document.getElementById('outCompanyEmail').textContent = v.companyEmail;
+    document.getElementById('outRefNo').textContent = `Ref. No.: ${computeRefNo(v)}`;
 
     document.getElementById('letterContent').innerHTML =
       v.noticeType === 'warning' ? buildWarningBody(v, d) : buildFinalBody(v, d);
@@ -806,12 +937,22 @@
     saveDraft();
   }
 
+  function setNoticeType(type){
+    document.getElementById('noticeType').value = type;
+    syncSegmented();
+    render();
+  }
+
   function init(){
     const saved = loadDraft();
     setValues(saved || SAMPLE_FINAL);
     render();
 
     document.getElementById('noticeForm').addEventListener('input', render);
+
+    document.querySelectorAll('#typeSegmented .seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => setNoticeType(btn.dataset.value));
+    });
 
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
