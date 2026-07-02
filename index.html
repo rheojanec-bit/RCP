@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Notice of Forfeiture Generator — RCP Real Estate Management Services</title>
+<title>Notice Generator — RCP Real Estate Management Services</title>
 <style>
   :root{
     --green-dark:#2f3826;
@@ -56,6 +56,10 @@
     margin-bottom:16px;
     padding:12px 14px 14px;
   }
+  fieldset.type-warning{
+    border-color:#e3c98a;
+    background:#fffdf6;
+  }
   legend{
     font-size:12px;
     font-weight:700;
@@ -100,6 +104,11 @@
     border-radius:6px;
     padding:6px 8px;
     margin-top:2px;
+  }
+  .helper-note{
+    font-size:11px;
+    color:#777;
+    margin:2px 0 0;
   }
   .actions{
     display:flex;
@@ -207,33 +216,29 @@
     border-top:2px solid var(--green-dark);
     margin:0 0 18px;
   }
-  .letter-date{
-    font-weight:700;
-    margin-bottom:16px;
-  }
-  .recipient-block{
-    font-weight:700;
-    margin-bottom:16px;
-    line-height:1.5;
-  }
-  .subject-line{
-    font-weight:700;
-    color:var(--navy);
-    margin-bottom:16px;
-  }
-  .salutation{
-    font-weight:700;
-    margin-bottom:14px;
-  }
   .letter-body p{
     line-height:1.6;
     margin:0 0 14px;
     text-align:justify;
   }
+  .letter-body p.letter-date{
+    font-weight:700;
+  }
+  .letter-body p.recipient-block{
+    font-weight:700;
+    line-height:1.5;
+  }
+  .letter-body p.subject-line{
+    font-weight:700;
+    color:var(--navy);
+  }
+  .letter-body p.salutation{
+    font-weight:700;
+  }
   .letter-body p.bold{
     font-weight:700;
   }
-  .letter-body .heading-line{
+  .letter-body p.heading-line{
     font-weight:700;
     color:var(--navy);
     margin-bottom:8px;
@@ -315,10 +320,22 @@
 
   <!-- ============ FORM PANEL ============ -->
   <div class="form-panel">
-    <h1>Notice of Forfeiture Generator</h1>
+    <h1>Notice Generator</h1>
     <p class="subtitle">Fill in the details below — the letter on the right updates automatically. Use "Print / Save as PDF" when ready.</p>
 
     <form id="noticeForm" autocomplete="off">
+
+      <fieldset>
+        <legend>Notice type</legend>
+        <div class="field">
+          <label for="noticeType">Which letter do you need?</label>
+          <select id="noticeType">
+            <option value="warning">Warning — possible forfeiture (first notice)</option>
+            <option value="final">Final Notice of Forfeiture</option>
+          </select>
+        </div>
+        <p class="helper-note">Send the Warning first. If the account is still unsettled after the deadline, switch to Final Notice of Forfeiture.</p>
+      </fieldset>
 
       <fieldset>
         <legend>Company / Letterhead</legend>
@@ -425,6 +442,15 @@
         <div class="calc-note" id="calcNote">Months delayed will be calculated automatically.</div>
       </fieldset>
 
+      <fieldset id="warningFieldset" class="type-warning">
+        <legend>Warning notice — settlement deadline</legend>
+        <div class="field">
+          <label for="settleDeadline">Settle balance on or before</label>
+          <input id="settleDeadline" type="date" />
+        </div>
+        <p class="helper-note">Leave blank to default to the last day of the letter's month.</p>
+      </fieldset>
+
       <fieldset>
         <legend>Contract terms</legend>
         <div class="row3">
@@ -472,8 +498,8 @@
       <button id="resetBtn" type="button">Reset to sample</button>
       <button id="clearBtn" type="button">Clear draft</button>
     </div>
-    <p class="autosave-note">Your entries are saved automatically in this browser (nothing is uploaded anywhere).</p>
-    <p class="legal-note">This tool only formats the letter you already use. It is not legal advice — have counsel confirm the notice period and forfeiture terms comply with your Contract to Sell and applicable law (e.g. RA 6552) before sending.</p>
+    <p class="autosave-note">Your entries are saved automatically in this browser (nothing is uploaded anywhere). "Reset to sample" loads the example matching the notice type selected above.</p>
+    <p class="legal-note">This tool only formats the letter you already use. It is not legal advice — have counsel confirm the notice periods and forfeiture terms comply with your Contract to Sell and applicable law (e.g. RA 6552) before sending.</p>
   </div>
 
   <!-- ============ PREVIEW PANEL ============ -->
@@ -493,41 +519,7 @@
 
       <div class="letter-body">
         <hr class="rule" />
-        <p class="letter-date" id="outDate"></p>
-
-        <p class="recipient-block" id="outRecipientBlock"></p>
-
-        <p class="subject-line">Subject: Notice of Forfeiture of Lot Property</p>
-
-        <p class="salutation" id="outSalutation"></p>
-
-        <p>We hope this letter finds you well.</p>
-
-        <p id="outPara1"></p>
-
-        <p class="heading-line">As stated in the agreement:</p>
-
-        <div class="terms-item">
-          <span class="num">1.</span>
-          <p id="outTermsItem"></p>
-        </div>
-
-        <p class="bold" id="outPara2"></p>
-
-        <p>We regret that this action has become necessary, but we are obliged to enforce the provisions of our agreement.</p>
-
-        <p id="outPara3"></p>
-
-        <p>Any future action will be carried out in accordance with the signed agreement and all applicable laws.</p>
-
-        <p class="bold">Thank you for your attention to this matter.</p>
-
-        <div class="closing">
-          <p class="warm">Warm Regards,</p>
-          <p class="sig-name" id="outSigName"></p>
-          <p class="sig-title" id="outSigTitle"></p>
-          <p class="sig-company" id="outSigCompany"></p>
-        </div>
+        <div id="letterContent"></div>
       </div>
 
       <div class="letter-footer">
@@ -550,9 +542,10 @@
 
 <script>
 (function(){
-  const STORAGE_KEY = 'forfeitureNoticeDraft_v1';
+  const STORAGE_KEY = 'noticeGeneratorDraft_v2';
 
-  const SAMPLE = {
+  const SAMPLE_FINAL = {
+    noticeType: 'final',
     companyName: 'RCP REAL ESTATE MANAGEMENT SERVICES',
     companyAddress: 'Ground Floor, Husky Building Tour Center, North Buluang Ave., GSC',
     companyPhone: '+63 951-152-4486',
@@ -570,6 +563,7 @@
     propertyCity: 'General Santos City',
     delinqStart: '2025-11',
     delinqEnd: '2026-05',
+    settleDeadline: '',
     installmentThreshold: 3,
     interestRate: 3,
     graceDays: 5,
@@ -579,7 +573,36 @@
     signatoryCompany: 'RCP Realty Services'
   };
 
-  const fieldIds = Object.keys(SAMPLE);
+  const SAMPLE_WARNING = {
+    noticeType: 'warning',
+    companyName: 'RCP REAL ESTATE MANAGEMENT SERVICES',
+    companyAddress: 'Ground Floor, Husky Building Tour Center, North Buluang Ave., GSC',
+    companyPhone: '+63 951-152-4486',
+    companyEmail: 'rcprealtyservices@gmail.com',
+    logoInitials: 'RCP',
+    recipientTitle: 'Ms.',
+    recipientName: 'Precy Perez',
+    recipientCity: 'General Santos City',
+    recipientProvince: 'South Cotabato, 9500',
+    letterDate: '2026-03-19',
+    block: '1',
+    lot: '12',
+    purok: '10',
+    barangay: 'Tinagacan',
+    propertyCity: 'General Santos City',
+    delinqStart: '2025-07',
+    delinqEnd: '2026-03',
+    settleDeadline: '2026-03-31',
+    installmentThreshold: 3,
+    interestRate: 3,
+    graceDays: 5,
+    contestDays: 3,
+    signatoryName: 'Bryan Pelayo',
+    signatoryTitle: 'Owner',
+    signatoryCompany: 'RCP Realty Services'
+  };
+
+  const fieldIds = Object.keys(SAMPLE_FINAL);
 
   const ONES = ['zero','one','two','three','four','five','six','seven','eight','nine','ten',
     'eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
@@ -617,6 +640,19 @@
     return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   }
 
+  function lastDayOfMonthLabel(dateValue){
+    if (!dateValue) return '';
+    const [y, m] = dateValue.split('-').map(Number);
+    const dt = new Date(y, m, 0);
+    return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function escapeHtml(str){
+    return String(str || '').replace(/[&<>"']/g, ch => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[ch]));
+  }
+
   function getValues(){
     const v = {};
     fieldIds.forEach(id => {
@@ -631,7 +667,8 @@
     fieldIds.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.value = v[id] !== undefined && v[id] !== '' ? v[id] : SAMPLE[id];
+      const fallback = (v.noticeType === 'warning' ? SAMPLE_WARNING : SAMPLE_FINAL)[id];
+      el.value = v[id] !== undefined && v[id] !== '' ? v[id] : (fallback !== undefined ? fallback : '');
     });
   }
 
@@ -648,20 +685,107 @@
     }catch(e){ return null; }
   }
 
+  function toggleTypeFields(v){
+    document.getElementById('warningFieldset').style.display = v.noticeType === 'warning' ? '' : 'none';
+  }
+
+  function buildFinalBody(v, d){
+    return `
+      <p class="letter-date">${d.dateFormatted}</p>
+      <p class="recipient-block">${escapeHtml(d.recipientFull.toUpperCase())}<br/>${escapeHtml(v.recipientCity)}<br/>${escapeHtml(v.recipientProvince)}</p>
+      <p class="subject-line">Subject: Notice of Forfeiture of Lot Property</p>
+      <p class="salutation">Dear ${escapeHtml(v.recipientTitle.toUpperCase())} ${escapeHtml(d.recipientLastName.toUpperCase())},</p>
+      <p>We hope this letter finds you well.</p>
+      <p>This is to formally notify you of the forfeiture of your reserved property located at
+        <mark>Block ${escapeHtml(v.block)}, Lot ${escapeHtml(v.lot)}, Prk. ${escapeHtml(v.purok)} ${escapeHtml(v.barangay)}, ${escapeHtml(v.propertyCity)}</mark>,
+        due to non-compliance with the terms and conditions of the Contract to Sell. According to our records,
+        you have failed to make any monthly payments from <mark>${d.startLabel} to ${d.endLabel}</mark>, totaling
+        <mark>${d.monthsWord.toUpperCase()} (${d.monthsCount}) consecutive months</mark> of non-payment.</p>
+      <p class="heading-line">As stated in the agreement:</p>
+      <div class="terms-item">
+        <span class="num">1.</span>
+        <p>Failure to pay ${d.installmentWord} (${escapeHtml(String(v.installmentThreshold))}) consecutive monthly installments
+          — with a ${escapeHtml(String(v.interestRate))}% monthly interest applied after a ${d.graceWord} (${escapeHtml(String(v.graceDays))}) working-day grace period
+          — grants the Vendor full authority to forfeit the reservation and resell the property.</p>
+      </div>
+      <p class="bold">As a result, ${escapeHtml(v.companyName)} is now exercising its right to forfeit your account. All payments made are
+        considered non-refundable, and your rights to the said property are revoked effective immediately.</p>
+      <p>We regret that this action has become necessary, but we are obliged to enforce the provisions of our agreement.</p>
+      <p>If you believe this notice was issued in error or wish to discuss the matter further, please contact us at
+        <mark>${escapeHtml(v.companyPhone)}</mark> within ${d.contestWord} (${escapeHtml(String(v.contestDays))}) days from receipt of this letter.
+        If we do not receive any feedback within the given period, we will consider the matter final.</p>
+      <p>Any future action will be carried out in accordance with the signed agreement and all applicable laws.</p>
+      <p class="bold">Thank you for your attention to this matter.</p>
+      <div class="closing">
+        <p class="warm">Warm Regards,</p>
+        <p class="sig-name">${escapeHtml(v.signatoryName)}</p>
+        <p class="sig-title">${escapeHtml(v.signatoryTitle)}</p>
+        <p class="sig-company">${escapeHtml(v.signatoryCompany.toUpperCase())}</p>
+      </div>
+    `;
+  }
+
+  function buildWarningBody(v, d){
+    return `
+      <p class="letter-date">${d.dateFormatted}</p>
+      <p class="recipient-block">${escapeHtml(d.recipientFull)}<br/>${escapeHtml(v.recipientCity)}<br/>${escapeHtml(v.recipientProvince)}</p>
+      <p class="subject-line">Subject: Notice of Warning for Possible Forfeiture of Lot Property</p>
+      <p class="salutation">Dear ${escapeHtml(v.recipientTitle)} ${escapeHtml(d.recipientLastName)},</p>
+      <p>Greetings.</p>
+      <p>We hope this letter finds you well.</p>
+      <p class="bold" style="color:var(--navy)">This is to formally inform you of a warning regarding the possible forfeiture of your reserved property
+        located at Block ${escapeHtml(v.block)}, Lot ${escapeHtml(v.lot)}, Prk. ${escapeHtml(v.purok)} ${escapeHtml(v.barangay)}, ${escapeHtml(v.propertyCity)},
+        due to non-compliance with the terms and conditions stated in your Contract to Sell.</p>
+      <p class="bold" style="color:var(--navy)">Based on our records, there have been no monthly payments made from ${d.startLabel} to ${d.endLabel},
+        totaling ${d.monthsWord} (${d.monthsCount}) consecutive months of non-payment.</p>
+      <p class="heading-line">As stipulated in the agreement:</p>
+      <div class="terms-item">
+        <span class="num">1.</span>
+        <p>Failure to pay ${d.installmentWord} (${escapeHtml(String(v.installmentThreshold))}) consecutive monthly installments
+          — with a corresponding ${escapeHtml(String(v.interestRate))}% monthly interest applied after a ${d.graceWord} (${escapeHtml(String(v.graceDays))}) working-day grace period
+          — grants the Vendor the right to forfeit the reservation and resell the property.</p>
+      </div>
+      <p>In this regard, ${escapeHtml(v.companyName)} is issuing this notice as a formal warning and is respectfully encouraging you
+        to settle your outstanding balance on or before <mark>${d.deadlineFormatted}</mark> to update your account and avoid further action.</p>
+      <p>We regret that this step has become necessary; however, we are obliged to enforce the provisions of the agreement to maintain
+        fairness among all our clients. Should the account remain unsettled, we will be constrained to issue a Final Notice of Forfeiture
+        for the said property.</p>
+      <p>If you believe this notice has been issued in error or if you wish to discuss the matter further, you may contact us at
+        <mark>${escapeHtml(v.companyPhone)}</mark> within ${d.contestWord} (${escapeHtml(String(v.contestDays))}) days of receipt of this letter.
+        Otherwise, failure to respond within the given period will be taken as acknowledgment of this notice. Any further action will be
+        carried out in accordance with the signed agreement and all applicable laws. Thank you for your prompt attention to this matter.</p>
+      <p class="bold">Respectfully,<br/>${escapeHtml(v.companyName)}</p>
+      <div class="closing">
+        <p class="warm">Warm Regards,</p>
+        <p class="sig-name">${escapeHtml(v.signatoryName)}</p>
+        <p class="sig-title">${escapeHtml(v.signatoryTitle)}</p>
+        <p class="sig-company">${escapeHtml(v.signatoryCompany.toUpperCase())}</p>
+      </div>
+    `;
+  }
+
   function render(){
     const v = getValues();
+    toggleTypeFields(v);
 
     const monthsCount = monthsBetweenInclusive(v.delinqStart, v.delinqEnd);
     const monthsWord = numberToWords(monthsCount).toUpperCase();
     const startLabel = monthYearLabel(v.delinqStart);
     const endLabel = monthYearLabel(v.delinqEnd);
 
-    const installmentWord = numberToWords(v.installmentThreshold);
-    const graceWord = numberToWords(v.graceDays);
-    const contestWord = numberToWords(v.contestDays);
-
-    const recipientFull = `${v.recipientTitle} ${v.recipientName}`.trim();
-    const recipientLastName = (v.recipientName || '').trim().split(/\s+/).slice(-1)[0] || '';
+    const d = {
+      dateFormatted: formatLongDate(v.letterDate),
+      recipientFull: `${v.recipientTitle} ${v.recipientName}`.trim(),
+      recipientLastName: (v.recipientName || '').trim().split(/\s+/).slice(-1)[0] || '',
+      monthsCount,
+      monthsWord,
+      startLabel,
+      endLabel,
+      installmentWord: numberToWords(v.installmentThreshold),
+      graceWord: numberToWords(v.graceDays),
+      contestWord: numberToWords(v.contestDays),
+      deadlineFormatted: v.settleDeadline ? formatLongDate(v.settleDeadline) : lastDayOfMonthLabel(v.letterDate)
+    };
 
     document.getElementById('outLogo').textContent = (v.logoInitials || 'RCP').toUpperCase();
     document.getElementById('outCompanyName').textContent = v.companyName;
@@ -669,42 +793,12 @@
     document.getElementById('outCompanyPhone').textContent = v.companyPhone;
     document.getElementById('outCompanyEmail').textContent = v.companyEmail;
 
-    document.getElementById('outDate').textContent = formatLongDate(v.letterDate);
-
-    document.getElementById('outRecipientBlock').innerHTML =
-      `${recipientFull.toUpperCase()}<br/>${v.recipientCity}<br/>${v.recipientProvince}`;
-
-    document.getElementById('outSalutation').textContent =
-      `Dear ${v.recipientTitle.toUpperCase()} ${recipientLastName.toUpperCase()},`;
-
-    document.getElementById('outPara1').innerHTML =
-      `This is to formally notify you of the forfeiture of your reserved property located at ` +
-      `<mark>Block ${v.block}, Lot ${v.lot}, Prk. ${v.purok} ${v.barangay}, ${v.propertyCity}</mark>, ` +
-      `due to non-compliance with the terms and conditions of the Contract to Sell. According to our records, ` +
-      `you have failed to make any monthly payments from <mark>${startLabel} to ${endLabel}</mark>, totaling ` +
-      `<mark>${monthsWord} (${monthsCount}) consecutive months</mark> of non-payment.`;
-
-    document.getElementById('outTermsItem').textContent =
-      `Failure to pay ${installmentWord} (${v.installmentThreshold}) consecutive monthly installments ` +
-      `— with a ${v.interestRate}% monthly interest applied after a ${graceWord} (${v.graceDays}) working-day grace period ` +
-      `— grants the Vendor full authority to forfeit the reservation and resell the property.`;
-
-    document.getElementById('outPara2').textContent =
-      `As a result, ${v.companyName} is now exercising its right to forfeit your account. All payments made are ` +
-      `considered non-refundable, and your rights to the said property are revoked effective immediately.`;
-
-    document.getElementById('outPara3').innerHTML =
-      `If you believe this notice was issued in error or wish to discuss the matter further, please contact us at ` +
-      `<mark>${v.companyPhone}</mark> within ${contestWord} (${v.contestDays}) days from receipt of this letter. ` +
-      `If we do not receive any feedback within the given period, we will consider the matter final.`;
-
-    document.getElementById('outSigName').textContent = v.signatoryName;
-    document.getElementById('outSigTitle').textContent = v.signatoryTitle;
-    document.getElementById('outSigCompany').textContent = v.signatoryCompany.toUpperCase();
+    document.getElementById('letterContent').innerHTML =
+      v.noticeType === 'warning' ? buildWarningBody(v, d) : buildFinalBody(v, d);
 
     if (monthsCount > 0 && v.delinqStart && v.delinqEnd){
       document.getElementById('calcNote').textContent =
-        `= ${monthsWord.toUpperCase()} (${monthsCount}) consecutive month${monthsCount === 1 ? '' : 's'} of non-payment.`;
+        `= ${monthsWord} (${monthsCount}) consecutive month${monthsCount === 1 ? '' : 's'} of non-payment.`;
     } else {
       document.getElementById('calcNote').textContent = 'Months delayed will be calculated automatically.';
     }
@@ -714,7 +808,7 @@
 
   function init(){
     const saved = loadDraft();
-    setValues(saved || SAMPLE);
+    setValues(saved || SAMPLE_FINAL);
     render();
 
     document.getElementById('noticeForm').addEventListener('input', render);
@@ -722,13 +816,14 @@
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
     document.getElementById('resetBtn').addEventListener('click', () => {
-      setValues(SAMPLE);
+      const currentType = document.getElementById('noticeType').value;
+      setValues(currentType === 'warning' ? SAMPLE_WARNING : SAMPLE_FINAL);
       render();
     });
 
     document.getElementById('clearBtn').addEventListener('click', () => {
       try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
-      setValues(SAMPLE);
+      setValues(SAMPLE_FINAL);
       render();
     });
   }
