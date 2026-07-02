@@ -464,7 +464,7 @@
   }
   .letter-body{
     flex:1;
-    padding:34px 48px 12px;
+    padding:34px 48px 28px;
   }
   .letter-body p{
     line-height:1.68;
@@ -553,20 +553,10 @@
   }
 
   .letter-footer{
-    height:44px;
-    background:var(--green-dark);
-    position:relative;
-    overflow:hidden;
-    border-top:2px solid var(--gold);
+    height:6px;
+    background:linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
-  }
-  .letter-footer svg{
-    position:absolute;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:100%;
   }
 
   mark{
@@ -854,19 +844,7 @@
         <div id="letterContent"></div>
       </div>
 
-      <div class="letter-footer">
-        <svg viewBox="0 0 600 60" preserveAspectRatio="none">
-          <rect x="10" y="20" width="30" height="40" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="45" y="10" width="24" height="50" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="75" y="28" width="20" height="32" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="105" y="15" width="26" height="45" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="140" y="25" width="18" height="35" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="470" y="18" width="22" height="42" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="500" y="8" width="26" height="52" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="532" y="24" width="20" height="36" fill="#8f9a7b" opacity="0.55"/>
-          <rect x="558" y="14" width="24" height="46" fill="#8f9a7b" opacity="0.55"/>
-        </svg>
-      </div>
+      <div class="letter-footer"></div>
     </div>
   </div>
 
