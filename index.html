@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Notice of Forfeiture Generator — RCP Real Estate Management Services</title>
+<style>
+  :root{
+    --green-dark:#2f3826;
+    --green-mid:#3d4a2c;
+    --gold:#cdb87a;
+    --navy:#1a3c8a;
+    --paper:#ffffff;
+    --ink:#1c1c1c;
+    --panel-bg:#f4f5f0;
+    --border:#d9dccf;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:Georgia, 'Times New Roman', serif;
+    background:var(--panel-bg);
+    color:var(--ink);
+  }
+  .app{
+    display:flex;
+    min-height:100vh;
+    align-items:flex-start;
+  }
+  /* ---------- FORM PANEL ---------- */
+  .form-panel{
+    width:420px;
+    flex-shrink:0;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:24px;
+    height:100vh;
+    overflow-y:auto;
+    position:sticky;
+    top:0;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .form-panel h1{
+    font-size:18px;
+    margin:0 0 4px;
+    color:var(--green-dark);
+  }
+  .form-panel .subtitle{
+    font-size:12px;
+    color:#666;
+    margin:0 0 20px;
+  }
+  fieldset{
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:16px;
+    padding:12px 14px 14px;
+  }
+  legend{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--green-mid);
+    padding:0 6px;
+  }
+  .field{
+    margin-bottom:10px;
+  }
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    margin-bottom:3px;
+    color:#333;
+  }
+  .field input, .field select{
+    width:100%;
+    padding:7px 8px;
+    font-size:13px;
+    border:1px solid #c9cbc3;
+    border-radius:5px;
+    font-family:inherit;
+  }
+  .row2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .row3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+  }
+  .calc-note{
+    font-size:11.5px;
+    color:var(--navy);
+    background:#eef1fb;
+    border:1px solid #c9d3f2;
+    border-radius:6px;
+    padding:6px 8px;
+    margin-top:2px;
+  }
+  .actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  button{
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 14px;
+    border-radius:6px;
+    border:1px solid var(--green-dark);
+    cursor:pointer;
+  }
+  #printBtn{
+    background:var(--green-dark);
+    color:#fff;
+    flex:1 1 auto;
+  }
+  #printBtn:hover{ background:var(--green-mid); }
+  #resetBtn, #clearBtn{
+    background:#fff;
+    color:var(--green-dark);
+  }
+  .autosave-note{
+    font-size:11px;
+    color:#888;
+    margin-top:10px;
+  }
+  .legal-note{
+    font-size:11px;
+    color:#8a6d00;
+    background:#fff8e1;
+    border:1px solid #f0e0a0;
+    border-radius:6px;
+    padding:8px 10px;
+    margin-top:16px;
+    line-height:1.4;
+  }
+
+  /* ---------- PREVIEW PANEL ---------- */
+  .preview-panel{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    padding:32px 24px;
+  }
+  .letter{
+    width:8.5in;
+    max-width:100%;
+    min-height:11in;
+    background:var(--paper);
+    box-shadow:0 4px 18px rgba(0,0,0,.18);
+    display:flex;
+    flex-direction:column;
+  }
+  .letter-header{
+    background:var(--green-dark);
+    color:#fff;
+    padding:22px 36px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .logo-badge{
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #4a5a37, #22291a);
+    border:3px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    color:var(--gold);
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:.03em;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .header-text .company-name{
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:.02em;
+    line-height:1.25;
+    margin:0 0 6px;
+  }
+  .header-text .company-meta{
+    font-size:11.5px;
+    color:var(--gold);
+    line-height:1.5;
+  }
+  .letter-body{
+    flex:1;
+    padding:30px 40px 10px;
+    border-bottom:4px solid var(--green-dark);
+  }
+  .rule{
+    border:none;
+    border-top:2px solid var(--green-dark);
+    margin:0 0 18px;
+  }
+  .letter-date{
+    font-weight:700;
+    margin-bottom:16px;
+  }
+  .recipient-block{
+    font-weight:700;
+    margin-bottom:16px;
+    line-height:1.5;
+  }
+  .subject-line{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:16px;
+  }
+  .salutation{
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .letter-body p{
+    line-height:1.6;
+    margin:0 0 14px;
+    text-align:justify;
+  }
+  .letter-body p.bold{
+    font-weight:700;
+  }
+  .letter-body .heading-line{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:8px;
+  }
+  .terms-item{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .terms-item .num{
+    font-weight:700;
+  }
+  .terms-item p{
+    margin:0;
+    font-weight:700;
+    line-height:1.6;
+    text-align:justify;
+  }
+  .closing{
+    margin-top:10px;
+  }
+  .closing .warm{
+    font-weight:700;
+    margin-bottom:36px;
+  }
+  .sig-name{
+    font-family:'Brush Script MT','Segoe Script',cursive;
+    font-size:26px;
+    margin-bottom:2px;
+    color:#222;
+  }
+  .sig-title{
+    font-weight:700;
+  }
+  .sig-company{
+    font-weight:700;
+    color:var(--green-dark);
+  }
+  .letter-footer{
+    height:46px;
+    background:var(--green-dark);
+    position:relative;
+    overflow:hidden;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .letter-footer svg{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:100%;
+    opacity:.45;
+  }
+
+  mark{
+    background:none;
+    font-weight:700;
+    color:inherit;
+  }
+
+  @media print{
+    .form-panel{ display:none; }
+    .preview-panel{ padding:0; }
+    body{ background:#fff; }
+    .letter{ box-shadow:none; width:auto; min-height:auto; }
+    @page{ size: Letter; margin: 0; }
+  }
+
+  @media (max-width: 900px){
+    .app{ flex-direction:column; }
+    .form-panel{ width:100%; height:auto; position:relative; }
+    .letter{ width:100%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ FORM PANEL ============ -->
+  <div class="form-panel">
+    <h1>Notice of Forfeiture Generator</h1>
+    <p class="subtitle">Fill in the details below — the letter on the right updates automatically. Use "Print / Save as PDF" when ready.</p>
+
+    <form id="noticeForm" autocomplete="off">
+
+      <fieldset>
+        <legend>Company / Letterhead</legend>
+        <div class="field">
+          <label for="companyName">Company name</label>
+          <input id="companyName" type="text" />
+        </div>
+        <div class="field">
+          <label for="companyAddress">Office address</label>
+          <input id="companyAddress" type="text" />
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="companyPhone">Phone</label>
+            <input id="companyPhone" type="text" />
+          </div>
+          <div class="field">
+            <label for="companyEmail">Email</label>
+            <input id="companyEmail" type="text" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="logoInitials">Logo initials</label>
+          <input id="logoInitials" type="text" maxlength="4" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Recipient</legend>
+        <div class="row3">
+          <div class="field">
+            <label for="recipientTitle">Title</label>
+            <select id="recipientTitle">
+              <option>Mr.</option>
+              <option>Ms.</option>
+              <option>Mrs.</option>
+              <option>Engr.</option>
+              <option>Atty.</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:span 2;">
+            <label for="recipientName">Full name</label>
+            <input id="recipientName" type="text" placeholder="Mark Arroyo" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="recipientCity">City</label>
+          <input id="recipientCity" type="text" />
+        </div>
+        <div class="field">
+          <label for="recipientProvince">Province / ZIP</label>
+          <input id="recipientProvince" type="text" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Letter date</legend>
+        <div class="field">
+          <label for="letterDate">Date of notice</label>
+          <input id="letterDate" type="date" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Property details</legend>
+        <div class="row3">
+          <div class="field">
+            <label for="block">Block</label>
+            <input id="block" type="text" />
+          </div>
+          <div class="field">
+            <label for="lot">Lot</label>
+            <input id="lot" type="text" />
+          </div>
+          <div class="field">
+            <label for="purok">Purok</label>
+            <input id="purok" type="text" />
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="barangay">Barangay / Sitio</label>
+            <input id="barangay" type="text" />
+          </div>
+          <div class="field">
+            <label for="propertyCity">City</label>
+            <input id="propertyCity" type="text" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Non-payment period</legend>
+        <div class="row2">
+          <div class="field">
+            <label for="delinqStart">First unpaid month</label>
+            <input id="delinqStart" type="month" />
+          </div>
+          <div class="field">
+            <label for="delinqEnd">Latest unpaid month</label>
+            <input id="delinqEnd" type="month" />
+          </div>
+        </div>
+        <div class="calc-note" id="calcNote">Months delayed will be calculated automatically.</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Contract terms</legend>
+        <div class="row3">
+          <div class="field">
+            <label for="installmentThreshold">Missed installments that trigger forfeiture</label>
+            <input id="installmentThreshold" type="number" min="1" />
+          </div>
+          <div class="field">
+            <label for="interestRate">Monthly interest (%)</label>
+            <input id="interestRate" type="number" min="0" step="0.1" />
+          </div>
+          <div class="field">
+            <label for="graceDays">Grace period (days)</label>
+            <input id="graceDays" type="number" min="0" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="contestDays">Days to contest notice after receipt</label>
+          <input id="contestDays" type="number" min="0" />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Signatory</legend>
+        <div class="field">
+          <label for="signatoryName">Name</label>
+          <input id="signatoryName" type="text" />
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="signatoryTitle">Title</label>
+            <input id="signatoryTitle" type="text" />
+          </div>
+          <div class="field">
+            <label for="signatoryCompany">Signing for</label>
+            <input id="signatoryCompany" type="text" />
+          </div>
+        </div>
+      </fieldset>
+
+    </form>
+
+    <div class="actions">
+      <button id="printBtn" type="button">Print / Save as PDF</button>
+      <button id="resetBtn" type="button">Reset to sample</button>
+      <button id="clearBtn" type="button">Clear draft</button>
+    </div>
+    <p class="autosave-note">Your entries are saved automatically in this browser (nothing is uploaded anywhere).</p>
+    <p class="legal-note">This tool only formats the letter you already use. It is not legal advice — have counsel confirm the notice period and forfeiture terms comply with your Contract to Sell and applicable law (e.g. RA 6552) before sending.</p>
+  </div>
+
+  <!-- ============ PREVIEW PANEL ============ -->
+  <div class="preview-panel">
+    <div class="letter" id="letter">
+      <div class="letter-header">
+        <div class="logo-badge" id="outLogo">RCP</div>
+        <div class="header-text">
+          <p class="company-name" id="outCompanyName"></p>
+          <p class="company-meta">
+            <span id="outCompanyAddress"></span><br/>
+            Call us <span id="outCompanyPhone"></span><br/>
+            <span id="outCompanyEmail"></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="letter-body">
+        <hr class="rule" />
+        <p class="letter-date" id="outDate"></p>
+
+        <p class="recipient-block" id="outRecipientBlock"></p>
+
+        <p class="subject-line">Subject: Notice of Forfeiture of Lot Property</p>
+
+        <p class="salutation" id="outSalutation"></p>
+
+        <p>We hope this letter finds you well.</p>
+
+        <p id="outPara1"></p>
+
+        <p class="heading-line">As stated in the agreement:</p>
+
+        <div class="terms-item">
+          <span class="num">1.</span>
+          <p id="outTermsItem"></p>
+        </div>
+
+        <p class="bold" id="outPara2"></p>
+
+        <p>We regret that this action has become necessary, but we are obliged to enforce the provisions of our agreement.</p>
+
+        <p id="outPara3"></p>
+
+        <p>Any future action will be carried out in accordance with the signed agreement and all applicable laws.</p>
+
+        <p class="bold">Thank you for your attention to this matter.</p>
+
+        <div class="closing">
+          <p class="warm">Warm Regards,</p>
+          <p class="sig-name" id="outSigName"></p>
+          <p class="sig-title" id="outSigTitle"></p>
+          <p class="sig-company" id="outSigCompany"></p>
+        </div>
+      </div>
+
+      <div class="letter-footer">
+        <svg viewBox="0 0 600 60" preserveAspectRatio="none">
+          <rect x="10" y="20" width="30" height="40" fill="#9aa38a"/>
+          <rect x="45" y="10" width="24" height="50" fill="#9aa38a"/>
+          <rect x="75" y="28" width="20" height="32" fill="#9aa38a"/>
+          <rect x="105" y="15" width="26" height="45" fill="#9aa38a"/>
+          <rect x="140" y="25" width="18" height="35" fill="#9aa38a"/>
+          <rect x="470" y="18" width="22" height="42" fill="#9aa38a"/>
+          <rect x="500" y="8" width="26" height="52" fill="#9aa38a"/>
+          <rect x="532" y="24" width="20" height="36" fill="#9aa38a"/>
+          <rect x="558" y="14" width="24" height="46" fill="#9aa38a"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'forfeitureNoticeDraft_v1';
+
+  const SAMPLE = {
+    companyName: 'RCP REAL ESTATE MANAGEMENT SERVICES',
+    companyAddress: 'Ground Floor, Husky Building Tour Center, North Buluang Ave., GSC',
+    companyPhone: '+63 951-152-4486',
+    companyEmail: 'rcprealtyservices@gmail.com',
+    logoInitials: 'RCP',
+    recipientTitle: 'Mr.',
+    recipientName: 'Mark Arroyo',
+    recipientCity: 'General Santos City',
+    recipientProvince: 'South Cotabato, 9500',
+    letterDate: '2026-05-13',
+    block: '3',
+    lot: '17',
+    purok: '15',
+    barangay: 'Tinagacan',
+    propertyCity: 'General Santos City',
+    delinqStart: '2025-11',
+    delinqEnd: '2026-05',
+    installmentThreshold: 3,
+    interestRate: 3,
+    graceDays: 5,
+    contestDays: 3,
+    signatoryName: 'Bryan Pelayo',
+    signatoryTitle: 'Owner',
+    signatoryCompany: 'RCP Realty Services'
+  };
+
+  const fieldIds = Object.keys(SAMPLE);
+
+  const ONES = ['zero','one','two','three','four','five','six','seven','eight','nine','ten',
+    'eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+  const TENS = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+
+  function numberToWords(n){
+    n = Math.max(0, Math.round(Number(n) || 0));
+    if (n < 20) return ONES[n];
+    if (n < 100){
+      const t = Math.floor(n/10), o = n%10;
+      return TENS[t] + (o ? '-' + ONES[o] : '');
+    }
+    return String(n);
+  }
+
+  function monthYearLabel(monthValue){
+    if (!monthValue) return '';
+    const [y, m] = monthValue.split('-').map(Number);
+    const d = new Date(y, m - 1, 1);
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toUpperCase();
+  }
+
+  function monthsBetweenInclusive(startValue, endValue){
+    if (!startValue || !endValue) return 0;
+    const [sy, sm] = startValue.split('-').map(Number);
+    const [ey, em] = endValue.split('-').map(Number);
+    const diff = (ey * 12 + em) - (sy * 12 + sm) + 1;
+    return diff > 0 ? diff : 0;
+  }
+
+  function formatLongDate(dateValue){
+    if (!dateValue) return '';
+    const [y, m, d] = dateValue.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function getValues(){
+    const v = {};
+    fieldIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      v[id] = el.value;
+    });
+    return v;
+  }
+
+  function setValues(v){
+    fieldIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.value = v[id] !== undefined && v[id] !== '' ? v[id] : SAMPLE[id];
+    });
+  }
+
+  function saveDraft(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(getValues()));
+    }catch(e){ /* storage unavailable, ignore */ }
+  }
+
+  function loadDraft(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+
+  function render(){
+    const v = getValues();
+
+    const monthsCount = monthsBetweenInclusive(v.delinqStart, v.delinqEnd);
+    const monthsWord = numberToWords(monthsCount).toUpperCase();
+    const startLabel = monthYearLabel(v.delinqStart);
+    const endLabel = monthYearLabel(v.delinqEnd);
+
+    const installmentWord = numberToWords(v.installmentThreshold);
+    const graceWord = numberToWords(v.graceDays);
+    const contestWord = numberToWords(v.contestDays);
+
+    const recipientFull = `${v.recipientTitle} ${v.recipientName}`.trim();
+    const recipientLastName = (v.recipientName || '').trim().split(/\s+/).slice(-1)[0] || '';
+
+    document.getElementById('outLogo').textContent = (v.logoInitials || 'RCP').toUpperCase();
+    document.getElementById('outCompanyName').textContent = v.companyName;
+    document.getElementById('outCompanyAddress').textContent = v.companyAddress;
+    document.getElementById('outCompanyPhone').textContent = v.companyPhone;
+    document.getElementById('outCompanyEmail').textContent = v.companyEmail;
+
+    document.getElementById('outDate').textContent = formatLongDate(v.letterDate);
+
+    document.getElementById('outRecipientBlock').innerHTML =
+      `${recipientFull.toUpperCase()}<br/>${v.recipientCity}<br/>${v.recipientProvince}`;
+
+    document.getElementById('outSalutation').textContent =
+      `Dear ${v.recipientTitle.toUpperCase()} ${recipientLastName.toUpperCase()},`;
+
+    document.getElementById('outPara1').innerHTML =
+      `This is to formally notify you of the forfeiture of your reserved property located at ` +
+      `<mark>Block ${v.block}, Lot ${v.lot}, Prk. ${v.purok} ${v.barangay}, ${v.propertyCity}</mark>, ` +
+      `due to non-compliance with the terms and conditions of the Contract to Sell. According to our records, ` +
+      `you have failed to make any monthly payments from <mark>${startLabel} to ${endLabel}</mark>, totaling ` +
+      `<mark>${monthsWord} (${monthsCount}) consecutive months</mark> of non-payment.`;
+
+    document.getElementById('outTermsItem').textContent =
+      `Failure to pay ${installmentWord} (${v.installmentThreshold}) consecutive monthly installments ` +
+      `— with a ${v.interestRate}% monthly interest applied after a ${graceWord} (${v.graceDays}) working-day grace period ` +
+      `— grants the Vendor full authority to forfeit the reservation and resell the property.`;
+
+    document.getElementById('outPara2').textContent =
+      `As a result, ${v.companyName} is now exercising its right to forfeit your account. All payments made are ` +
+      `considered non-refundable, and your rights to the said property are revoked effective immediately.`;
+
+    document.getElementById('outPara3').innerHTML =
+      `If you believe this notice was issued in error or wish to discuss the matter further, please contact us at ` +
+      `<mark>${v.companyPhone}</mark> within ${contestWord} (${v.contestDays}) days from receipt of this letter. ` +
+      `If we do not receive any feedback within the given period, we will consider the matter final.`;
+
+    document.getElementById('outSigName').textContent = v.signatoryName;
+    document.getElementById('outSigTitle').textContent = v.signatoryTitle;
+    document.getElementById('outSigCompany').textContent = v.signatoryCompany.toUpperCase();
+
+    if (monthsCount > 0 && v.delinqStart && v.delinqEnd){
+      document.getElementById('calcNote').textContent =
+        `= ${monthsWord.toUpperCase()} (${monthsCount}) consecutive month${monthsCount === 1 ? '' : 's'} of non-payment.`;
+    } else {
+      document.getElementById('calcNote').textContent = 'Months delayed will be calculated automatically.';
+    }
+
+    saveDraft();
+  }
+
+  function init(){
+    const saved = loadDraft();
+    setValues(saved || SAMPLE);
+    render();
+
+    document.getElementById('noticeForm').addEventListener('input', render);
+
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      setValues(SAMPLE);
+      render();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+      setValues(SAMPLE);
+      render();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
