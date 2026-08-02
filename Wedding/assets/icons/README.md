@@ -1,0 +1,1 @@
+Reserved for custom icon assets (e.g. SVG/PNG favicons or share images). The program-flow and detail icons ship as inline SVG in `script.js`, so no files are required here by default — drop in your own if you'd like to swap them.

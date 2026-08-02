@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Glenn &amp; Randy</title>
+  <desc id="desc">Placeholder illustration — replace with your own couple photo at assets/images/couple-hero.jpg</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6f9ab8"/>
+      <stop offset="55%" stop-color="#8fb2cf"/>
+      <stop offset="100%" stop-color="#cdd9e4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#f3e3c4" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#f3e3c4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#sky)"/>
+  <rect width="800" height="1000" fill="url(#glow)"/>
+
+  <!-- bokeh -->
+  <g opacity="0.55" fill="#F8F6F2">
+    <circle cx="120" cy="160" r="10"/>
+    <circle cx="680" cy="120" r="14"/>
+    <circle cx="640" cy="260" r="6"/>
+    <circle cx="90" cy="420" r="7"/>
+    <circle cx="720" cy="500" r="9"/>
+    <circle cx="60" cy="720" r="5"/>
+    <circle cx="740" cy="820" r="11"/>
+  </g>
+  <g opacity="0.4" fill="#D9C3A5">
+    <circle cx="200" cy="90" r="16"/>
+    <circle cx="600" cy="70" r="10"/>
+    <circle cx="150" cy="600" r="12"/>
+    <circle cx="700" cy="650" r="8"/>
+  </g>
+
+  <!-- silhouettes, back view, minimal line style -->
+  <g transform="translate(400,560)" fill="none" stroke="#33465a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9">
+    <!-- groom -->
+    <path d="M -30 190 C -80 190 -95 90 -70 30 C -55 -10 -40 -35 -20 -45 C -5 -52 10 -52 20 -45
+             C 22 -20 20 10 30 40 C 45 90 30 150 25 190 Z" fill="#3c5975"/>
+    <circle cx="-5" cy="-95" r="34" fill="#3c5975"/>
+
+    <!-- bride -->
+    <path d="M 40 190 C 130 190 150 60 110 -10 C 95 -35 70 -45 50 -40
+             C 40 -10 42 20 30 50 C 15 100 25 150 30 190 Z" fill="#eef1ec"/>
+    <circle cx="70" cy="-70" r="30" fill="#f6e9d4"/>
+    <path d="M 42 -70 C 42 -100 96 -100 98 -70 C 100 -40 96 -10 70 5 C 44 -10 40 -40 42 -70 Z" fill="#4a3524"/>
+
+    <!-- bouquet -->
+    <g transform="translate(58,20)">
+      <circle cx="0" cy="0" r="7" fill="#D9C3A5"/>
+      <circle cx="10" cy="6" r="6" fill="#F8F6F2"/>
+      <circle cx="-8" cy="8" r="6" fill="#7FA7C6"/>
+      <circle cx="2" cy="14" r="6" fill="#F8F6F2"/>
+    </g>
+  </g>
+
+  <text x="400" y="900" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="46" fill="#F8F6F2" letter-spacing="4">G &amp; R</text>
+</svg>
