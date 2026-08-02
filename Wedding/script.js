@@ -38,13 +38,9 @@
   /* -----------------------------------------------------------------------
    * Populate static text / attributes from config
    * --------------------------------------------------------------------- */
-  function renderHeroAndGate() {
+  function renderHero() {
     const { brideFirstName, groomFirstName, coupleMonogram, heroTagline, heroImage } = cfg.couple;
     document.title = `${brideFirstName} & ${groomFirstName} — ${cfg.wedding.displayDate}`;
-
-    $("#gate-bride").textContent = brideFirstName;
-    $("#gate-groom").textContent = groomFirstName;
-    $("#gate-date").textContent = cfg.wedding.displayDate;
 
     $("#heroBride").textContent = brideFirstName;
     $("#heroGroom").textContent = groomFirstName;
@@ -173,12 +169,18 @@
     $("#dressGentlemen").innerHTML = cfg.dressCode.gentlemen.map((i) => `<li>${i}</li>`).join("");
   }
 
+  function isLightHex(hex) {
+    const n = parseInt(hex.replace("#", ""), 16);
+    const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 235;
+  }
+
   function renderMotif() {
     $("#motifSwatches").innerHTML = cfg.motif
       .map(
         (m) => `
       <div class="motif-swatch">
-        <div class="swatch-color" style="background:${m.hex}; ${m.hex.toUpperCase() === "#FFFFFF" ? "border-color:#e5e5e5;" : ""}"></div>
+        <div class="swatch-color" style="background:${m.hex}; ${isLightHex(m.hex) ? "border-color:#e5e5e5;" : ""}"></div>
         <span>${m.name}</span>
       </div>`
       )
@@ -357,24 +359,6 @@
   }
 
   /* -----------------------------------------------------------------------
-   * Invitation gate
-   * --------------------------------------------------------------------- */
-  function setupGate() {
-    const gate = $("#gate");
-    const btn = $("#openInvitationBtn");
-    btn.addEventListener(
-      "click",
-      () => {
-        gate.classList.add("opened");
-        document.body.style.overflow = "";
-        attemptMusicAutoplay();
-      },
-      { once: true }
-    );
-    document.body.style.overflow = "hidden";
-  }
-
-  /* -----------------------------------------------------------------------
    * Floating music player
    * --------------------------------------------------------------------- */
   let musicStarted = false;
@@ -446,8 +430,8 @@
       audio.volume = Number(volume.value);
     });
 
-    // Fallback: start music on first user interaction anywhere on the page
-    // (handles browsers that block the gate-button-triggered play() call).
+    // Browsers block autoplay without a gesture, so start music on the
+    // guest's first interaction anywhere on the page.
     const resumeOnInteraction = () => {
       attemptMusicAutoplay();
       document.removeEventListener("click", resumeOnInteraction);
@@ -459,7 +443,7 @@
    * Init
    * --------------------------------------------------------------------- */
   function init() {
-    renderHeroAndGate();
+    renderHero();
     renderDetails();
     renderEntourage();
     renderProgram();
@@ -476,7 +460,6 @@
     setupNav();
     setupParticles();
     setupMusicPlayer();
-    setupGate();
   }
 
   if (document.readyState === "loading") {

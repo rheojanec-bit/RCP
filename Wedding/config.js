@@ -83,16 +83,16 @@ window.WEDDING_CONFIG = {
   ],
 
   dressCode: {
-    subtitle: "We kindly request our guests to wear formal attire.",
-    ladies: ["Long Gown", "Cocktail Dress", "Formal Dress"],
-    gentlemen: ["Suit", "Barong Tagalog", "Formal Attire"],
+    subtitle: "We kindly request our guests to wear formal attire in shades of blue.",
+    ladies: ["Mismatched Blue Gowns", "Cocktail Dress", "Soft Chiffon Dress"],
+    gentlemen: ["Navy Suit", "Barong Tagalog", "Dusty Blue Tie"],
   },
 
   motif: [
+    { name: "Navy", hex: "#2C3B5C" },
     { name: "Dusty Blue", hex: "#7FA7C6" },
-    { name: "Ivory", hex: "#F8F6F2" },
-    { name: "Champagne Gold", hex: "#D9C3A5" },
-    { name: "White", hex: "#FFFFFF" },
+    { name: "Powder Blue", hex: "#B7C6E0" },
+    { name: "Ivory White", hex: "#F8F6F2" },
   ],
 
   bibleVerse: {
