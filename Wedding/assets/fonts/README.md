@@ -1,0 +1,1 @@
+Reserved for self-hosted font files. By default the site loads Playfair Display, Cormorant Garamond, Poppins, and Inter from Google Fonts (see the `<link>` tags in `index.html`). Drop `.woff2` files here and update those tags if you need an offline/self-hosted build.

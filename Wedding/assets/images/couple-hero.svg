@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Glenn &amp; Randy</title>
+  <desc id="desc">Placeholder illustration — replace with your own couple photo at assets/images/couple-hero.jpg</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#243a56"/>
+      <stop offset="45%" stop-color="#3f5c7d"/>
+      <stop offset="100%" stop-color="#8fa9c4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#f0dfb8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#f0dfb8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#sky)"/>
+  <rect width="800" height="1000" fill="url(#glow)"/>
+
+  <!-- soft drapery folds -->
+  <g opacity="0.12" stroke="#F8F6F2" stroke-width="3" fill="none">
+    <path d="M40 0 C 20 300 60 700 10 1000"/>
+    <path d="M150 0 C 130 350 170 650 130 1000"/>
+    <path d="M650 0 C 670 320 630 680 670 1000"/>
+    <path d="M760 0 C 740 300 780 700 750 1000"/>
+  </g>
+
+  <!-- warm bokeh / fairy lights -->
+  <g opacity="0.75" fill="#F3E3C0">
+    <circle cx="120" cy="150" r="6"/>
+    <circle cx="90" cy="230" r="4"/>
+    <circle cx="660" cy="110" r="7"/>
+    <circle cx="700" cy="200" r="4"/>
+    <circle cx="640" cy="300" r="5"/>
+    <circle cx="80" cy="400" r="5"/>
+    <circle cx="730" cy="470" r="6"/>
+    <circle cx="60" cy="640" r="4"/>
+    <circle cx="745" cy="720" r="7"/>
+    <circle cx="150" cy="80" r="5"/>
+  </g>
+  <!-- cool bokeh -->
+  <g opacity="0.5" fill="#F8F6F2">
+    <circle cx="200" cy="90" r="10"/>
+    <circle cx="610" cy="60" r="8"/>
+    <circle cx="140" cy="560" r="9"/>
+    <circle cx="705" cy="600" r="7"/>
+    <circle cx="40" cy="850" r="8"/>
+    <circle cx="760" cy="880" r="6"/>
+  </g>
+
+  <!-- silhouettes, back view, minimal line style -->
+  <g transform="translate(400,560)" fill="none" stroke="#1c2534" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.92">
+    <!-- groom, dark navy tux -->
+    <path d="M -30 190 C -80 190 -95 90 -70 30 C -55 -10 -40 -35 -20 -45 C -5 -52 10 -52 20 -45
+             C 22 -20 20 10 30 40 C 45 90 30 150 25 190 Z" fill="#222c40"/>
+    <circle cx="-5" cy="-95" r="34" fill="#222c40"/>
+
+    <!-- bride, white gown -->
+    <path d="M 40 190 C 130 190 150 60 110 -10 C 95 -35 70 -45 50 -40
+             C 40 -10 42 20 30 50 C 15 100 25 150 30 190 Z" fill="#f5f3ee"/>
+    <circle cx="70" cy="-70" r="30" fill="#f6e9d4"/>
+    <path d="M 42 -70 C 42 -100 96 -100 98 -70 C 100 -40 96 -10 70 5 C 44 -10 40 -40 42 -70 Z" fill="#4a3524"/>
+
+    <!-- baby's-breath style bouquet with a touch of blue -->
+    <g transform="translate(58,20)" stroke="none">
+      <circle cx="-4" cy="-4" r="3.2" fill="#F8F6F2"/>
+      <circle cx="4" cy="-6" r="2.8" fill="#F8F6F2"/>
+      <circle cx="10" cy="-1" r="3" fill="#F8F6F2"/>
+      <circle cx="-8" cy="3" r="3" fill="#F8F6F2"/>
+      <circle cx="0" cy="4" r="3.4" fill="#F8F6F2"/>
+      <circle cx="8" cy="7" r="3" fill="#F8F6F2"/>
+      <circle cx="-3" cy="10" r="3" fill="#F8F6F2"/>
+      <circle cx="5" cy="-10" r="2.4" fill="#B7C6E0"/>
+      <circle cx="-9" cy="-3" r="2.4" fill="#B7C6E0"/>
+      <circle cx="2" cy="12" r="2.4" fill="#7FA7C6"/>
+    </g>
+  </g>
+
+  <text x="400" y="900" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="46" fill="#F8F6F2" letter-spacing="4">G &amp; R</text>
+</svg>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Glenn &amp; Randy — August 25, 2026</title>
+<meta name="description" content="Together with our families, we joyfully invite you to celebrate the wedding of Glenn &amp; Randy on August 25, 2026 at Grand Palmera Hotel." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<link rel="icon" href="assets/images/couple-hero.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Floating particles (populated by JS) -->
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<!-- Header nav -->
+<nav class="site-nav" id="siteNav" aria-label="Section navigation">
+  <a href="#hero" class="nav-monogram" id="navMonogram">G &amp; R</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
+    <a href="#details">Details</a>
+    <a href="#entourage">Entourage</a>
+    <a href="#program">Program</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#rsvp">RSVP</a>
+    <a href="#gift">Gift</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-media">
+      <img id="heroImage" src="" alt="Glenn and Randy" class="hero-photo" />
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <p class="eyebrow" data-animate="fade-up">The Wedding Of</p>
+      <h1 class="hero-title" data-animate="fade-up">
+        <span id="heroBride">Glenn</span>
+        <span class="amp">&amp;</span>
+        <span id="heroGroom">Randy</span>
+      </h1>
+      <p class="hero-date" id="heroDate" data-animate="fade-up">August 25, 2026</p>
+      <p class="hero-quote" id="heroQuote" data-animate="fade-up">
+        Together with our families, we joyfully invite you to celebrate our wedding.
+      </p>
+      <a href="#countdown" class="scroll-cue" data-animate="fade-up" aria-label="Scroll down">
+        <span></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="countdown-section" id="countdown">
+    <p class="section-eyebrow" data-animate="fade-up">Counting Down To Forever</p>
+    <h2 class="section-title" data-animate="fade-up">Until We Say &ldquo;I Do&rdquo;</h2>
+    <div class="countdown" data-animate="scale-in">
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-days">00</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-hours">00</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-minutes">00</span>
+        <span class="countdown-label">Minutes</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-seconds">00</span>
+        <span class="countdown-label">Seconds</span>
+      </div>
+    </div>
+    <p class="bible-verse-top" id="bibleVerseTop" data-animate="fade-up"></p>
+  </section>
+
+  <!-- WEDDING DETAILS -->
+  <section class="details-section" id="details">
+    <p class="section-eyebrow" data-animate="fade-up">Save The Date</p>
+    <h2 class="section-title" data-animate="fade-up">Wedding Details</h2>
+    <div class="details-grid">
+      <div class="detail-card glass" data-animate="fade-right">
+        <div class="detail-icon" data-icon="rings"></div>
+        <h3>Ceremony</h3>
+        <p class="detail-venue" id="ceremonyVenue"></p>
+        <p class="detail-time" id="ceremonyTime"></p>
+        <p class="detail-address" id="ceremonyAddress"></p>
+        <a class="btn btn-outline" id="ceremonyMapsBtn" target="_blank" rel="noopener">View on Google Maps</a>
+      </div>
+      <div class="detail-card glass" data-animate="fade-left">
+        <div class="detail-icon" data-icon="toast"></div>
+        <h3>Reception</h3>
+        <p class="detail-venue" id="receptionVenue"></p>
+        <p class="detail-time" id="receptionTime"></p>
+        <p class="detail-address" id="receptionAddress"></p>
+        <a class="btn btn-outline" id="receptionMapsBtn" target="_blank" rel="noopener">View on Google Maps</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTOURAGE -->
+  <section class="entourage-section" id="entourage">
+    <p class="section-eyebrow" data-animate="fade-up">With Love &amp; Gratitude</p>
+    <h2 class="section-title" data-animate="fade-up">The Entourage</h2>
+    <div class="entourage-grid" id="entourageGrid"></div>
+  </section>
+
+  <!-- PROGRAM FLOW -->
+  <section class="program-section" id="program">
+    <p class="section-eyebrow" data-animate="fade-up">How The Day Unfolds</p>
+    <h2 class="section-title" data-animate="fade-up">Program Flow</h2>
+    <div class="timeline" id="programTimeline"></div>
+  </section>
+
+  <!-- DRESS CODE -->
+  <section class="dresscode-section" id="dresscode">
+    <p class="section-eyebrow" data-animate="fade-up">What To Wear</p>
+    <h2 class="section-title" data-animate="fade-up">Dress Code</h2>
+    <p class="section-subtitle" id="dressCodeSubtitle" data-animate="fade-up"></p>
+    <div class="dresscode-grid">
+      <div class="dresscode-card glass" data-animate="fade-right">
+        <h3>Ladies</h3>
+        <ul id="dressLadies"></ul>
+      </div>
+      <div class="dresscode-card glass" data-animate="fade-left">
+        <h3>Gentlemen</h3>
+        <ul id="dressGentlemen"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEDDING MOTIF -->
+  <section class="motif-section" id="motif">
+    <p class="section-eyebrow" data-animate="fade-up">Our Palette</p>
+    <h2 class="section-title" data-animate="fade-up">Wedding Motif</h2>
+    <div class="motif-swatches" id="motifSwatches" data-animate="scale-in"></div>
+  </section>
+
+  <!-- BIBLE VERSE -->
+  <section class="verse-section" id="verse">
+    <div class="verse-inner" data-animate="scale-in">
+      <span class="verse-mark">&ldquo;</span>
+      <p class="verse-text" id="verseText"></p>
+      <p class="verse-ref" id="verseRef"></p>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery-section" id="gallery">
+    <p class="section-eyebrow" data-animate="fade-up">Captured Moments</p>
+    <h2 class="section-title" data-animate="fade-up">Photo Gallery</h2>
+    <div class="masonry" id="galleryMasonry"></div>
+  </section>
+
+  <!-- RSVP -->
+  <section class="rsvp-section" id="rsvp">
+    <p class="section-eyebrow" data-animate="fade-up">Kindly Respond</p>
+    <h2 class="section-title" data-animate="fade-up">RSVP</h2>
+    <p class="section-subtitle" id="rsvpDeadline" data-animate="fade-up"></p>
+
+    <form class="rsvp-form glass" id="rsvpForm" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-animate="scale-in">
+      <input type="hidden" name="form-name" value="rsvp" />
+      <p class="hidden-field"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+      <div class="form-row">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="fullName" required autocomplete="name" />
+      </div>
+      <div class="form-row">
+        <label for="mobileNumber">Mobile Number</label>
+        <input type="tel" id="mobileNumber" name="mobileNumber" required autocomplete="tel" />
+      </div>
+      <div class="form-row">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required autocomplete="email" />
+      </div>
+      <div class="form-row">
+        <label for="attending">Will you attend?</label>
+        <select id="attending" name="attending" required>
+          <option value="">Please select</option>
+          <option value="Joyfully Accept">Joyfully Accept</option>
+          <option value="Regretfully Decline">Regretfully Decline</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="guestCount">Number of Guests</label>
+        <select id="guestCount" name="guestCount" required>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="mealPreference">Meal Preference</label>
+        <select id="mealPreference" name="mealPreference" required></select>
+      </div>
+      <div class="form-row form-row-full">
+        <label for="message">Message for the Couple</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary form-submit">Send RSVP</button>
+    </form>
+
+    <div class="rsvp-success" id="rsvpSuccess" hidden>
+      <div class="rsvp-success-icon">
+        <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
+      </div>
+      <h3>Thank You!</h3>
+      <p>Your RSVP has been received with love. We can't wait to celebrate with you.</p>
+    </div>
+  </section>
+
+  <!-- GIFT -->
+  <section class="gift-section" id="gift">
+    <p class="section-eyebrow" data-animate="fade-up">A Gentle Note</p>
+    <h2 class="section-title" id="giftTitle" data-animate="fade-up"></h2>
+    <p class="section-subtitle" id="giftMessage" data-animate="fade-up"></p>
+    <div class="gift-grid">
+      <div class="gift-card glass" data-animate="fade-right">
+        <h3>GCash</h3>
+        <img id="gcashQr" src="" alt="GCash QR code" class="gift-qr" loading="lazy" />
+        <p id="gcashName"></p>
+        <p id="gcashNumber"></p>
+      </div>
+      <div class="gift-card glass" data-animate="fade-left">
+        <h3>Bank Transfer</h3>
+        <p><strong>Bank:</strong> <span id="bankName"></span></p>
+        <p><strong>Account Name:</strong> <span id="bankAccountName"></span></p>
+        <p><strong>Account Number:</strong> <span id="bankAccountNumber"></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION -->
+  <section class="location-section" id="location">
+    <p class="section-eyebrow" data-animate="fade-up">Find Your Way</p>
+    <h2 class="section-title" data-animate="fade-up">Location</h2>
+    <div class="map-wrap glass" data-animate="scale-in">
+      <iframe id="locationMap" src="" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Wedding venue map"></iframe>
+    </div>
+    <a class="btn btn-primary" id="directionsBtn" target="_blank" rel="noopener" data-animate="fade-up">Get Directions</a>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p class="footer-monogram" id="footerMonogram">Glenn <span class="heart">&#10084;</span> Randy</p>
+  <p class="footer-date" id="footerDate">August 25, 2026</p>
+  <p class="footer-thanks">Thank you for celebrating with us.</p>
+  <p class="footer-credit">Made with Love</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <img id="lightboxImg" src="" alt="" />
+</div>
+
+<!-- FLOATING MUSIC PLAYER -->
+<div class="music-player" id="musicPlayer">
+  <audio id="audio" src="" loop preload="none"></audio>
+  <button class="music-toggle" id="musicToggle" aria-label="Play music">
+    <span class="music-disc" id="musicDisc">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/></svg>
+    </span>
+  </button>
+  <div class="music-panel hidden-panel" id="musicPanel">
+    <p class="music-title" id="musicTitle">Our Wedding Theme</p>
+    <div class="music-progress">
+      <input type="range" id="musicSeek" min="0" max="100" value="0" step="0.1" aria-label="Seek">
+    </div>
+    <div class="music-controls">
+      <button id="musicPlayBtn" class="music-play-btn" aria-label="Play">
+        <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        <svg id="iconPause" viewBox="0 0 24 24" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>
+      </button>
+      <svg class="music-vol-icon" viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/></svg>
+      <input type="range" id="musicVolume" min="0" max="1" value="0.6" step="0.01" aria-label="Volume">
+      <button id="musicMinBtn" class="music-min-btn" aria-label="Minimize player">&minus;</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
