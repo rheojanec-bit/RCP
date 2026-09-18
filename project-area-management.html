@@ -1608,38 +1608,10 @@ function uid(p){ return (p||'ID')+'-'+Date.now().toString(36)+Math.random().toSt
 
 /* ---------- SEED DEMO DATA ---------- */
 function seedIfEmpty(){
-  if(STATE.projects===null){
-    STATE.projects = [
-      {id:'PRJ-WV', name:'Wisdom Ville', location:'Malapatan, Sarangani Province', developer:'RCP Real Estate Mgmt. Services', description:'Flagship residential lot development.', notes:'', active:true},
-      {id:'PRJ-TNG', name:'Tinagacan / Emmanuel Project', location:'Prk. 10, Brgy. Tinagacan', developer:'RCP Realty Services', description:'Affiliated project area.', notes:'', active:true},
-      {id:'PRJ-AFF', name:'Affiliated', location:'Various', developer:'Partner Landowners', description:'Affiliated commission-based projects.', notes:'', active:true},
-      {id:'PRJ-EDU', name:'Eduardo', location:'General Santos City', developer:'RCP Realty Services', description:'', notes:'', active:true}
-    ];
-  }
-  if(STATE.clients===null){
-    STATE.clients = [{
-      id:'CLI-DEMO1', name:'CONNIE DINGAL HITCHMAN', address:'General Santos City', contact:'0917-123-4567', email:'',
-      projectId:'PRJ-TNG', lotId:'LOT-DEMO1', tcp:640000, resFee:20000, discount:0, equity:50000, paymentTerms:'120 MOS.',
-      monthlyPayment:5000, months:120, dateReserved:'2023-01-15', agent:'J. Ramirez', teamLeader:'M. Santos', status:'ACTIVE', remarks:''
-    }];
-  }
-  if(STATE.lots===null){
-    STATE.lots = [
-      {id:'LOT-DEMO1', projectId:'PRJ-TNG', block:'1', lot:'4 & 5', area:240, pricePerSqm:2667, tcp:640000, resFee:20000, status:'SOLD', clientId:'CLI-DEMO1', agent:'J. Ramirez', dateReserved:'2023-01-15', dateSold:'', remarks:''},
-      {id:uid('LOT'), projectId:'PRJ-WV', block:'2', lot:'10', area:150, pricePerSqm:3200, tcp:480000, resFee:15000, status:'AVAILABLE', clientId:'', agent:'', dateReserved:'', dateSold:'', remarks:''},
-      {id:uid('LOT'), projectId:'PRJ-WV', block:'2', lot:'11', area:150, pricePerSqm:3200, tcp:480000, resFee:15000, status:'RESERVED', clientId:'', agent:'A. Cruz', dateReserved:'2024-11-02', dateSold:'', remarks:''},
-      {id:uid('LOT'), projectId:'PRJ-EDU', block:'1', lot:'3', area:200, pricePerSqm:2500, tcp:500000, resFee:20000, status:'FORFEITED', clientId:'', agent:'', dateReserved:'', dateSold:'', remarks:'Client defaulted after 3 months'}
-    ];
-  }
-  if(STATE.payments===null){
-    STATE.payments = [
-      {id:uid('PAY'), clientId:'CLI-DEMO1', date:'2023-01-15', paymentNo:1, description:'Downpayment + 2 MOS', amount:30000, method:'Cash', refNo:'AR-1001', receivedBy:'Accounting', remarks:''},
-      {id:uid('PAY'), clientId:'CLI-DEMO1', date:'2023-04-10', paymentNo:2, description:'3rd Payment', amount:5000, method:'Cash', refNo:'AR-1050', receivedBy:'Accounting', remarks:''},
-      {id:uid('PAY'), clientId:'CLI-DEMO1', date:'2023-05-12', paymentNo:3, description:'4th Payment', amount:5000, method:'GCash', refNo:'AR-1090', receivedBy:'Accounting', remarks:''},
-      {id:uid('PAY'), clientId:'CLI-DEMO1', date:'2023-06-14', paymentNo:4, description:'5th Payment', amount:5000, method:'Cash', refNo:'AR-1122', receivedBy:'Accounting', remarks:''},
-      {id:uid('PAY'), clientId:'CLI-DEMO1', date:'2023-07-11', paymentNo:5, description:'6th Payment', amount:5000, method:'Bank Transfer', refNo:'AR-1180', receivedBy:'Accounting', remarks:''}
-    ];
-  }
+  if(STATE.projects===null){ STATE.projects = []; }
+  if(STATE.clients===null){ STATE.clients = []; }
+  if(STATE.lots===null){ STATE.lots = []; }
+  if(STATE.payments===null){ STATE.payments = []; }
   if(STATE.settings===null){ STATE.settings = {...DEFAULT_SETTINGS}; }
   else { STATE.settings = {...DEFAULT_SETTINGS, ...STATE.settings}; }
   if(!STATE.settings.ctsTemplates){ STATE.settings.ctsTemplates = {}; }
